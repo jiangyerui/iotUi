@@ -4,7 +4,7 @@
 
 ## Build Setup
 
-# 教你学vue
+# 教你学vue，呵呵
 ``` bash
 # install dependencies
 npm install
