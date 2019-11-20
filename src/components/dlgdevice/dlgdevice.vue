@@ -67,7 +67,7 @@ export default {
     };
   },
   mounted() {
-    // this.devicePasswordConfirm = this.device.devicePassword;
+    // this.devicePasswordConfirm = this.device.devicePassword;111
   },
   created() {},
   computed: {
