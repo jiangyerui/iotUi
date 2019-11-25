@@ -20,13 +20,13 @@
         </tr>
         <tr v-for="item in companys.rows" :key="item.id">
           <td v-if="item.companyName">{{item.companyName}}</td>
-          <td v-else>未填写集团名称</td>
+          <td v-else>—</td>
           <td v-if="item.companyIntroduce">{{item.companyIntroduce}}</td>
-          <td v-else>未填写集团名称</td>
+          <td v-else>—</td>
           <td v-if="item.companyUserId">{{item.companyUserId}}</td>
-          <td v-else>未填写集团名称</td>
+          <td v-else>—</td>
           <td v-if="item.companyPermission">{{item.companyPermission}}</td>
-          <td v-else>未填写集团名称</td>
+          <td v-else>—</td>
           <td>
             <a href="#" @click.prevent="updateCompany(item.companyId)">修改</a>
             <a href="#" @click.prevent="deleteCompany(item.companyId)">删除</a>

@@ -2,7 +2,11 @@
   <div id="mysetDevice">
     <div class="headerDevice">
       <button class="btnAddDevice" @click="addDeviceBtn">增加设备</button>
-      <dlgdevice v-if="isDlgDevice" @dlgConfirmDlgDevice="confirmDlgDevice" @dlgCloseDlgDevice="closeDlgDevice"></dlgdevice>
+      <dlgdevice
+        v-if="isDlgDevice"
+        @dlgConfirmDlgDevice="confirmDlgDevice"
+        @dlgCloseDlgDevice="closeDlgDevice"
+      ></dlgdevice>
       <div class="searchDevice">
         <!-- <input type="text" placeholder="输入设备手机号" v-model="devicePhone" /> -->
         <input type="text" placeholder="输入设备名称" v-model="deviceName" />
@@ -23,19 +27,22 @@
         </tr>
         <tr v-for="item in devices.rows" :key="item.id">
           <td v-if="item.deviceNo">{{item.deviceNo}}</td>
-          <td v-else>未填写设备编号</td>
+          <td v-else>—</td>
           <td v-if="item.deviceName">{{item.deviceName}}</td>
-          <td v-else>未填写设备名称</td>
-          <td v-if="item.devicePermission">{{item.devicePermission}}</td>
-          <td v-else>未填写所属系列</td>
+          <td v-else>—</td>
+          <td v-if="item.devicePermission">{{devicePermissionList[item.devicePermission]}}</td>
+          <td v-else>—</td>
           <td v-if="item.deviceCompanyId">{{item.deviceCompanyId}}</td>
-          <td v-else>未填写所属集团</td>
+          <td v-else>—</td>
           <td v-if="item.deviceProjectId">{{item.deviceProjectId}}</td>
-          <td v-else>未填写所属项目</td>
+          <td v-else>—</td>
           <td v-if="item.deviceCameraId">{{item.deviceCameraId}}</td>
-          <td v-else>未填写关联相机</td>
-          <td v-if="item.deviceStatus">{{item.deviceStatus}}</td>
-          <td v-else>未填写设备状态</td>
+          <td v-else>—</td>
+          <td
+            :class="deviceStatusList[item.deviceStatus].class"
+            v-if="item.deviceStatus"
+          >{{deviceStatusList[item.deviceStatus].name}}</td>
+          <td v-else>—</td>
           <td>
             <a href="#" @click.prevent="updateDevice(item.deviceId)">修改</a>
             <a href="#" @click.prevent="deleteDevice(item.deviceId)">删除</a>
@@ -69,6 +76,26 @@ export default {
   },
   data() {
     return {
+      classError: "",
+      classWarn: "",
+      classInfo: "",
+      devicePermissionList: [
+        "",
+        "智慧用电",
+        "电气火灾",
+        "消防电源",
+        "双电源",
+        "智能照明",
+        "智能电涌",
+        "智能配电",
+        "智能过欠"
+      ],
+      deviceStatusList: [
+        { class: "", name: "" },
+        { class: "classError", name: "试用" },
+        { class: "classInfo", name: "运行" },
+        { class: "classWarn", name: "停用" }
+      ],
       deviceName: "",
       isDlgDevice: false,
       page: 1, //  显示的是哪一页
@@ -82,10 +109,17 @@ export default {
     this.pageHandler(1);
   },
   mounted() {
-    this.$store.dispatch("selectDeviceById", 1);// 初始化vuex中的device
+    this.$store.dispatch("selectDeviceById", 1); // 初始化vuex中的device
   },
   computed: {
-    ...mapState(["device", "devices", "lcAcsB128", "lcAcs", "address", "categorys"])
+    ...mapState([
+      "device",
+      "devices",
+      "lcAcsB128",
+      "lcAcs",
+      "address",
+      "categorys"
+    ])
   },
   methods: {
     selectDeviceByIf() {},
@@ -105,7 +139,7 @@ export default {
       this.isDlgDevice = true;
     },
     async updateDevice(deviceId) {
-      await this.$store.dispatch("selectDeviceById", deviceId);// 等待异步执行完成
+      await this.$store.dispatch("selectDeviceById", deviceId); // 等待异步执行完成
       this.isDlgDevice = true;
     },
     deleteDevice(deviceId) {
@@ -176,6 +210,12 @@ export default {
           padding 10px 25px
           border 1px solid #000
           color #E7EAED
+      .classError
+        color red
+      .classWarn
+        color yellow
+      .classInfo
+        color green
       tr:nth-child(odd)
         background-color #131313
       tr:nth-child(even)

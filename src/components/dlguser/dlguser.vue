@@ -1,7 +1,7 @@
 <template>
   <div id="dlguser">
     <div class="container">
-      <div class="titleCompany">增加用户</div>
+      <div class="titleCompany">{{user.userId==''?'增加用户':'编辑用户'}}</div>
       <div class="contextUser">
         <div class="contextUserItem">
           <label>绑定手机:</label>
@@ -26,24 +26,62 @@
         <!-- <div class="contextUserItem">
           <label>用户权限:</label>
           <input type="text" v-model="user.userPermission" />
-        </div> -->
+        </div>-->
         <div class="contextUserItem">
           <label>用户角色:</label>
           <!-- <input type="text" v-model="user.userRole" /> -->
-          <select class="contextUserItem" v-model="user.userRole" @change="getSelectedUserStatus">
+          <select class v-model="user.userRole" @change="getSelectedUserStatus">
             <option :value="item.id" v-for="item in selectUserRoleList" :key="item.id">{{item.name}}</option>
           </select>
         </div>
         <div class="contextUserItem">
           <label>用户状态:</label>
           <!-- <input type="text" v-model="user.userStatus" /> -->
-          <select class="contextUserItem" v-model="user.userStatus" @change="getSelectedUserStatus">
+          <select class v-model="user.userStatus" @change="getSelectedUserStatus">
             <option
               :value="item.id"
               v-for="item in selectUserStatusList"
               :key="item.id"
             >{{item.name}}</option>
           </select>
+        </div>
+        <div class="permissionDiv">
+          <label>访问权限:</label>
+          <div class="permission">
+            <div class="permissionItem">
+              <input v-model="permission_zhyd" type="checkbox" />
+              <font>智慧用电</font>
+            </div>
+            <div class="permissionItem">
+              <input v-model="permission_xfdy" type="checkbox" />
+              <font>消防电源</font>
+            </div>
+            <div class="permissionItem">
+              <input v-model="permission_dqhz" type="checkbox" />
+              <font>电气火灾</font>
+            </div>
+            <div class="permissionItem">
+              <input v-model="permission_sdy" type="checkbox" />
+              <font>双电源</font>
+            </div>
+            <div class="permissionItem">
+              <input v-model="permission_znzm" type="checkbox" />
+              <font>智能照明</font>
+            </div>
+            <div class="permissionItem">
+              <input v-model="permission_zndy" type="checkbox" />
+              <font>智能电涌</font>
+            </div>
+            <div class="permissionItem">
+              <input v-model="permission_znpd" type="checkbox" />
+              <font>智能配电</font>
+            </div>
+            <div class="permissionItem">
+              <input v-model="permission_zngqy" type="checkbox" />
+              <font>智能过欠</font>
+            </div>
+          </div>
+          <!-- <input type="text" placeholder="请不超过20个字符" v-model="company.companyPermission" /> -->
         </div>
       </div>
       <div class="btnDiv">
@@ -59,6 +97,14 @@ export default {
   name: "dlguser",
   data() {
     return {
+      permission_zhyd: false,
+      permission_dqhz: false,
+      permission_xfdy: true,
+      permission_sdy: false,
+      permission_znzm: false,
+      permission_zndy: false,
+      permission_znpd: false,
+      permission_zngqy: false,
       userPasswordConfirm: "",
       userTemp: {
         userPhone: "",
@@ -112,7 +158,7 @@ export default {
   z-index 9999
   .container
     position absolute
-    width 500px
+    width 650px
     height 500px
     top 50%
     left 50%
@@ -151,7 +197,36 @@ export default {
           // margin-left 100px
           width 130px
           height 27px
-          border-radius 4px
+          border-radius 3px
+      .permissionDiv
+        // background-color green
+        position absolute
+        top 20px
+        left 410px
+        // vertical-align left
+        label
+          position absolute
+          left 0px
+        .permission
+          // background-color green
+          position relative
+          left 0px
+          top 20px
+          width 250px
+          height 240px
+          // position relative
+          // right 150px
+          // vertical-align left
+          // float left
+          .permissionItem
+            width 200px
+            margin-top 10px
+            vertical-align left
+            input
+              position absolute
+              left 10px
+              width 20px
+              height 20px
     .btnDiv
       position absolute
       // margin-right 50px

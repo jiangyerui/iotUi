@@ -26,22 +26,22 @@
         <tr v-for="item in users.rows" :key="item.id">
           <td>{{item.userPhone}}</td>
           <td v-if="item.userName">{{item.userName}}</td>
-          <td v-else>未填写用户名称</td>
+          <td v-else>—</td>
           <!-- <td>{{item.userRole}}</td> -->
           <td v-if="item.userRole==0">超级用户</td>
           <td v-else-if="item.userRole==1">集团用户</td>
           <td v-else-if="item.userRole==2">项目用户</td>
           <td v-else-if="item.userRole==3">普通用户</td>
-          <td v-else>未知用户角色</td>
+          <td v-else>—</td>
           <td v-if="item.userImg">{{item.userImg}}</td>
-          <td v-else>未填写用户头像</td>
+          <td v-else>—</td>
           <td v-if="item.userMail">{{item.userMail}}</td>
-          <td v-else>未填写用户邮箱</td>
+          <td v-else>—</td>
           <td>{{item.userPermissionId}}</td>
           <!-- <td>{{item.userStatus}}</td> -->
           <td v-if="item.userStatus==0" style="color: red">锁定</td>
           <td v-else-if="item.userStatus==1" style="color: green">正常</td>
-          <td v-else>未知状态</td>
+          <td v-else>—</td>
           <!-- <td>{{item.userParentId}}</td> -->
           <td>
             <a href="#" @click.prevent="updateUser(item.userId)">修改</a>

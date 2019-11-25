@@ -1,23 +1,26 @@
 <template>
   <div id="dlgdevice">
     <div class="container">
-      <div class="titleDevice">增加设备</div>
+      <div class="titleDevice">{{device.deviceId==''?'增加设备':'编辑设备'}}</div>
       <div class="contextDevice">
         <div class="contextDeviceItem">
-          <label>设备名称:</label>
-          <input type="text" placeholder="请输入11位手机号" v-model="device.deviceNo" />
+          <label>设备编号:</label>
+          <input type="text" placeholder="请输入正确的设备编号" v-model="device.deviceNo" />
         </div>
         <div class="contextDeviceItem">
           <label>设备名称:</label>
-          <input type="password" placeholder="请不要超过20个字符" v-model="device.deviceName" />
+          <input type="text" placeholder="请不要超过20个字符" v-model="device.deviceName" />
         </div>
         <div class="contextDeviceItem">
           <label>所属系列:</label>
-          <input type="password" placeholder="请不要超过20个字符" v-model="device.devicePermission" />
+          <!-- <input type="texts" placeholder="请不要超过20个字符" v-model="device.devicePermission" /> -->
+          <select class="" v-model="device.devicePermission" @change="getSelectedDeviceStatus">
+            <option :value="item.id" v-for="item in devicePermissionList" :key="item.id">{{item.name}}</option>
+          </select>
         </div>
         <div class="contextDeviceItem">
           <label>所属集团:</label>
-          <!-- <input type="text" placeholder="请不超过20个字符" v-model="device.deviceCompanyId" /> -->
+          <input type="text" placeholder="请不超过20个字符" v-model="device.deviceCompanyId" />
         </div>
         <div class="contextDeviceItem">
           <label>所属项目:</label>
@@ -29,7 +32,10 @@
         </div>
         <div class="contextDeviceItem">
           <label>设备状态:</label>
-          <input type="password" placeholder="请不要超过20个字符" v-model="device.deviceStatus" />
+          <!-- <input type="password" placeholder="请不要超过20个字符" v-model="device.deviceStatus" /> -->
+          <select class="" v-model="device.deviceStatus" @change="getSelectedDeviceStatus">
+            <option :value="item.id" v-for="item in selectDeviceStatusList" :key="item.id">{{item.name}}</option>
+          </select>
         </div>
       </div>
       <div class="btnDiv">
@@ -45,6 +51,24 @@ export default {
   name: "dlgdevice",
   data() {
     return {
+      selectDeviceStatusList: [
+        { id: 0, name: "" },
+        { id: 1, name: "试用" },
+        { id: 2, name: "运行" },
+        { id: 3, name: "停用" }
+      ],
+      // 1智慧用电，2电气火灾，3消防电源，4双电源，5智能照明，6智能电涌，7智能配电，8智能过欠',
+      devicePermissionList: [
+        { id: 0, name: "" },
+        { id: 1, name: "智慧用电" },
+        { id: 2, name: "电气火灾" },
+        { id: 3, name: "消防电源" },
+        { id: 4, name: "双电源" },
+        { id: 5, name: "智能照明" },
+        { id: 6, name: "智能电涌" },
+        { id: 7, name: "智能配电" },
+        { id: 8, name: "智能过欠" }
+      ],
       devicePasswordConfirm: "",
       deviceTemp: {
         deviceId: "",
@@ -57,7 +81,7 @@ export default {
         deviceCameraId: "",
         deviceStatus: ""
       },
-      selectDeviceStatusList: [{ id: 0, name: "锁定" }, { id: 1, name: "正常" }],
+      // selectDeviceStatusList: [{ id: 0, name: "锁定" }, { id: 1, name: "正常" }],
       selectDeviceRoleList: [
         { id: 1, name: "设备用户" },
         { id: 2, name: "设备用户" },

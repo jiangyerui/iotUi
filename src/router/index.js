@@ -9,8 +9,8 @@ import mysetproject from '../components/mysetproject/mysetproject'
 import mysetdevice from '../components/mysetdevice/mysetdevice'
 import mysetuser from '../components/mysetuser/mysetuser'
 import mysetcamera from '../components/mysetcamera/mysetcamera'
-import mysetalarm from '../components/mysetalarm/mysetalarm'
-import mysetlog from '../components/mysetlog/mysetlog'
+import mysetalarmlog from '../components/mysetalarmlog/mysetalarmlog'
+import mysetoperationlog from '../components/mysetoperationlog/mysetoperationlog'
 
 Vue.use(Router)
 
@@ -36,8 +36,8 @@ export default new Router({
         {path: '/myset/mysetdevice',component: mysetdevice},
         {path: '/myset/mysetuser',component: mysetuser},
         {path: '/myset/mysetcamera',component: mysetcamera},
-        {path: '/myset/mysetalarm',component: mysetalarm},
-        {path: '/myset/mysetlog',component: mysetlog}
+        {path: '/myset/mysetalarmlog',component: mysetalarmlog},
+        {path: '/myset/mysetoperationlog',component: mysetoperationlog}
       ]
     }
   ]

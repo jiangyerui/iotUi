@@ -2,6 +2,27 @@
 包含多个基于state的getter计算属性的对象
  */
 export default {
+  // operationlog
+  operationLog (state) {
+    return state.operationLog
+  },
+  operationLogs (state) {
+    return state.operationLogs
+  },
+  // alarmlog
+  alarmlog (state) {
+    return state.alarmLog
+  },
+  alarmlogs (state) {
+    return state.alarmLogs
+  },
+  // camera
+  camera (state) {
+    return state.camera
+  },
+  cameras (state) {
+    return state.cameras
+  },
   // device
   device (state) {
     return state.device

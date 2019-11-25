@@ -1,49 +1,23 @@
 <template>
-  <div id="dlguser">
+  <div id="dlgcamera">
     <div class="container">
-      <div class="titleCompany">增加用户</div>
-      <div class="contextUser">
-        <div class="contextUserItem">
-          <label>绑定手机:</label>
-          <input type="text" placeholder="请输入11位手机号" v-model="user.userPhone" />
+      <div class="titleCamera">{{camera.cameraId==''?'增加相机':'编辑相机'}}</div>
+      <div class="contextCamera">
+        <div class="contextCameraItem">
+          <label>想要识别码:</label>
+          <input type="text" placeholder="请不要超过20个字符" v-model="camera.cameraCode" />
         </div>
-        <div class="contextUserItem">
-          <label>用户密码:</label>
-          <input type="password" placeholder="请不要超过20个字符" v-model="user.userPassword" />
+        <div class="contextCameraItem">
+          <label>相机名称:</label>
+          <input type="text" placeholder="请不要超过20个字符" v-model="camera.cameraName" />
         </div>
-        <div class="contextUserItem">
-          <label>确认密码:</label>
-          <input type="password" placeholder="请不要超过20个字符" v-model="userPasswordConfirm" />
+        <div class="contextCameraItem">
+          <label>相机地址:</label>
+          <input type="text" placeholder="请不超过20个字符" v-model="camera.cameraIp" />
         </div>
-        <div class="contextUserItem">
-          <label>用户名称:</label>
-          <input type="text" placeholder="请不超过20个字符" v-model="user.userName" />
-        </div>
-        <div class="contextUserItem">
-          <label>用户邮箱:</label>
-          <input type="text" placeholder="请输入邮箱格式" v-model="user.userMail" />
-        </div>
-        <!-- <div class="contextUserItem">
-          <label>用户权限:</label>
-          <input type="text" v-model="user.userPermission" />
-        </div> -->
-        <div class="contextUserItem">
-          <label>用户角色:</label>
-          <!-- <input type="text" v-model="user.userRole" /> -->
-          <select class="contextUserItem" v-model="user.userRole" @change="getSelectedUserStatus">
-            <option :value="item.id" v-for="item in selectUserRoleList" :key="item.id">{{item.name}}</option>
-          </select>
-        </div>
-        <div class="contextUserItem">
-          <label>用户状态:</label>
-          <!-- <input type="text" v-model="user.userStatus" /> -->
-          <select class="contextUserItem" v-model="user.userStatus" @change="getSelectedUserStatus">
-            <option
-              :value="item.id"
-              v-for="item in selectUserStatusList"
-              :key="item.id"
-            >{{item.name}}</option>
-          </select>
+        <div class="contextCameraItem">
+          <label>相机状态:</label>
+          <input type="text" placeholder="请不要超过20个字符" v-model="camera.cameraStatus" />
         </div>
       </div>
       <div class="btnDiv">
@@ -56,53 +30,50 @@
 <script type='text/ecmascript-6'>
 import { mapState } from "vuex";
 export default {
-  name: "dlguser",
+  name: "dlgcamera",
   data() {
     return {
-      userPasswordConfirm: "",
-      userTemp: {
-        userPhone: "",
-        userPassword: "",
-        userName: "",
-        userRole: "",
-        userImg: "",
-        userMail: "",
-        userPermission: "",
-        userStatus: ""
+      cameraPasswordConfirm: "",
+      cameraTemp: {
+        cameraId: "",
+        cameraNo: "",
+        cameraName: "",
+        cameraPermission: "",
+        cameraCompanyId: "",
+        cameraProjectId: "",
+        cameraIntroduce: "",
+        cameraCameraId: "",
+        cameraStatus: ""
       },
-      selectUserStatusList: [{ id: 0, name: "锁定" }, { id: 1, name: "正常" }],
-      selectUserRoleList: [
-        { id: 1, name: "集团用户" },
-        { id: 2, name: "项目用户" },
+      selectCameraStatusList: [{ id: 0, name: "锁定" }, { id: 1, name: "正常" }],
+      selectCameraRoleList: [
+        { id: 1, name: "设备用户" },
+        { id: 2, name: "设备用户" },
         { id: 3, name: "普通用户" }
       ],
-      selectedUserStatus: ""
+      selectedCameraStatus: ""
     };
   },
   mounted() {
-    this.userPasswordConfirm = this.user.userPassword;
+    // this.cameraPasswordConfirm = this.camera.cameraPassword;111
   },
   created() {},
   computed: {
-    ...mapState(["user", "users", "lcAcsB128", "lcAcs", "address", "categorys"])
+    ...mapState(["camera", "cameras", "lcAcsB128", "lcAcs", "address", "categorys"])
   },
   methods: {
     dlgConfirm() {
-      if (this.user.userPassword !== this.userPasswordConfirm) {
-        alert("两次密码输入不一致");
-      } else {
-        this.$emit("dlgConfirmDlgUser", this.user);
-      }
+      this.$emit("dlgConfirmDlgCamera", this.camera);
     },
     dlgClose() {
-      this.$emit("dlgCloseDlgUser");
+      this.$emit("dlgCloseDlgCamera");
     },
-    getSelectedUserStatus() {}
+    getSelectedCameraStatus() {}
   }
 };
 </script>
 <style lang='stylus' rel='stylesheet/stylus'>
-#dlguser
+#dlgcamera
   position fixed
   top 0px
   bottom 0px
@@ -121,15 +92,15 @@ export default {
     border-radius 8px
     overflow hidden
     color #E7EAED
-    .titleCompany
+    .titleCamera
       width 100%
       height 30px
       background-color #383838
       padding-top 10px
-    .contextUser
+    .contextCamera
       position absolute
       left 15px
-      .contextUserItem
+      .contextCameraItem
         // display inline
         margin-top 20px
         label

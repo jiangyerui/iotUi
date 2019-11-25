@@ -72,6 +72,56 @@ export const reqSelectDeviceByPage = ({pageNum,pageSize,deviceName}) => ajaxGet(
     deviceName
 })
 
+// 增加一个相机
+export const reqAddCamera = (camera) => ajaxPost('/platform/camera/addCamera/',camera)
+// 删除一个相机
+export const reqDeleteCameraById = (cameraId) => ajaxDelete('/platform/camera/deleteCameraById/'+cameraId)
+// 修改一个相机
+export const reqUpdateCamera = (camera) => ajaxPut('/platform/camera/updateCamera/',camera)
+// 查询一个相机
+export const reqSelectCameraById = (cameraId) => ajaxGet('/platform/camera/selectCameraById/'+cameraId)
+// 查询所有相机
+export const reqSelectAllCamera = () => ajaxGet('/platform/camera/selectAllCamera/')
+// 分页查询相机
+export const reqSelectCameraByPage = ({pageNum,pageSize,cameraName}) => ajaxGet('/platform/camera/selectCameraByPage',{
+    pageNum,
+    pageSize,
+    cameraName
+})
+
+// 增加一个报警记录
+export const reqAddAlarmLog = (alarmlog) => ajaxPost('/platform/alarmLog/addAlarmLog/',alarmlog)
+// 删除一个报警记录
+export const reqDeleteAlarmLogById = (alarmlogId) => ajaxDelete('/platform/alarmLog/deleteAlarmLogById/'+alarmlogId)
+// 修改一个报警记录
+export const reqUpdateAlarmLog = (alarmlog) => ajaxPut('/platform/alarmLog/updateAlarmLog/',alarmlog)
+// 查询一个报警记录
+export const reqSelectAlarmLogById = (alarmlogId) => ajaxGet('/platform/alarmLog/selectAlarmLogById/'+alarmlogId)
+// 查询所有报警记录
+export const reqSelectAllAlarmLog = () => ajaxGet('/platform/alarmLog/selectAllAlarmLog/')
+// 分页查询报警记录
+export const reqSelectAlarmLogByPage = ({pageNum,pageSize,alarmlogName}) => ajaxGet('/platform/alarmLog/selectAlarmLogByPage',{
+    pageNum,
+    pageSize,
+    alarmlogName
+})
+
+// 增加一个操作记录
+export const reqAddOperationLog = (operationLog) => ajaxPost('/platform/operationLog/addOperationLog/',operationLog)
+// 删除一个操作记录
+export const reqDeleteOperationLogById = (operationLogId) => ajaxDelete('/platform/operationLog/deleteOperationLogById/'+operationLogId)
+// 修改一个操作记录
+export const reqUpdateOperationLog = (operationLog) => ajaxPut('/platform/operationLog/updateOperationLog/',operationLog)
+// 查询一个操作记录
+export const reqSelectOperationLogById = (operationLogId) => ajaxGet('/platform/operationLog/selectOperationLogById/'+operationLogId)
+// 查询所有操作记录
+export const reqSelectAllOperationLog = () => ajaxGet('/platform/operationLog/selectAllOperationLog/')
+// 分页查询操作记录
+export const reqSelectOperationLogByPage = ({pageNum,pageSize}) => ajaxGet('/platform/operationLog/selectOperationLogByPage',{
+    pageNum,
+    pageSize
+})
+
 // 获取lcAcsB128
 export const reqlcAcsB128 = (mac) => ajax('/api/lcAcsB128/'+mac)
 export const reqlcAcs = (id) => ajax('/api/lcAcs/'+id)

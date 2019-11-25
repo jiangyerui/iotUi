@@ -1,4 +1,16 @@
 import {
+    // operationlog
+    reqSelectOperationLogById,
+    reqSelectAllOperationLog,
+    reqSelectOperationLogByPage,
+    // alarmlog
+    reqSelectAlarmLogById,
+    reqSelectAllAlarmLog,
+    reqSelectAlarmLogByPage,
+    // camera
+    reqSelectCameraById,
+    reqSelectAllCamera,
+    reqSelectCameraByPage,
     // device
     reqSelectDeviceById,
     reqSelectAllDevice,
@@ -20,6 +32,15 @@ import {
     reqlcAcs
 } from '../api'
 import {
+    // operationlog
+    RECEIVE_OPERATIONLOG,
+    RECEIVE_OPERATIONLOGS,
+    // alarmlog
+    RECEIVE_ALARMLOG,
+    RECEIVE_ALARMLOGS,
+    // camera
+    RECEIVE_CAMERA,
+    RECEIVE_CAMERAS,
     // device
     RECEIVE_DEVICE,
     RECEIVE_DEVICES,
@@ -37,6 +58,63 @@ import {
     RECEIVE_LCACS
 } from './mutation-types'
 export default {
+    // operationlog
+    async clearOperationLogVal({ commit }, operationLog) {
+        const result = operationLog
+        commit(RECEIVE_OPERATIONLOG, { operationLog: result })
+    },
+    async selectOperationLogById({ commit }, operationLogId) {
+        const result = await reqSelectOperationLogById(operationLogId)
+        commit(RECEIVE_OPERATIONLOG, { operationLog: result })
+    },
+    async selectAllOperationLog({ commit }) {
+        const result = await reqSelectAllOperationLog()
+        commit(RECEIVE_OPERATIONLOGS, { operationLogs: result })
+    },
+    async selectOperationLogByPage({ commit, state }, { pageNum }) {
+        // console.log(pageNum)
+        const pageSize = state.pageSize
+        const result = await reqSelectOperationLogByPage({ pageNum, pageSize })
+        // console.log(result)
+        commit(RECEIVE_OPERATIONLOGS, { operationLogs: result })
+    },
+    // alarmlogs
+    async clearAlarmLogVal({ commit }, alarmlog) {
+        const result = alarmlog
+        commit(RECEIVE_ALARMLOG, { alarmLog: result })
+    },
+    async selectAlarmLogById({ commit }, alarmlogId) {
+        const result = await reqSelectAlarmLogById(alarmlogId)
+        commit(RECEIVE_ALARMLOG, { alarmLog: result })
+    },
+    async selectAllAlarmLog({ commit }) {
+        const result = await reqSelectAllAlarmLog()
+        commit(RECEIVE_ALARMLOGS, { alarmLogs: result })
+    },
+    async selectAlarmLogByPage({ commit, state }, { pageNum, alarmlogPhone, alarmlogName }) {
+        const pageSize = state.pageSize
+        const result = await reqSelectAlarmLogByPage({ pageNum, pageSize, alarmlogPhone, alarmlogName })
+        // console.log(result)
+        commit(RECEIVE_ALARMLOGS, { alarmLogs: result })
+    },
+    // camera
+    async clearCameraVal({ commit }, camera) {
+        const result = camera
+        commit(RECEIVE_CAMERA, { camera: result })
+    },
+    async selectCameraById({ commit }, cameraId) {
+        const result = await reqSelectCameraById(cameraId)
+        commit(RECEIVE_CAMERA, { camera: result })
+    },
+    async selectAllCamera({ commit }) {
+        const result = await reqSelectAllCamera()
+        commit(RECEIVE_CAMERAS, { cameras: result })
+    },
+    async selectCameraByPage({ commit, state }, { pageNum, cameraPhone, cameraName }) {
+        const pageSize = state.pageSize
+        const result = await reqSelectCameraByPage({ pageNum, pageSize, cameraPhone, cameraName })
+        commit(RECEIVE_CAMERAS, { cameras: result })
+    },
     // device
     async clearDeviceVal({ commit }, device) {
         const result = device

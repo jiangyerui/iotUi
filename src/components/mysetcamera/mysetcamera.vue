@@ -1,51 +1,38 @@
 <template>
-  <!-- <div id="mysetcompany" v-if="this.$route.path=='/mysetcompany'"> -->
-  <div id="mysetuser">
-    <div class="headeruser">
-      <button class="btnAdduser" @click="addUserBtn">增加用户</button>
-      <dlguser v-if="isDlgUser" @dlgConfirmDlgUser="confirmDlgUser" @dlgCloseDlgUser="closeDlgUser"></dlguser>
-      <div class="searchuser">
-        <input type="text" placeholder="输入用户手机号" v-model="userPhone" />
-        <input type="text" placeholder="输入用户名称" v-model="userName" />
+  <div id="mysetCamera">
+    <div class="headerCamera">
+      <button class="btnAddCamera" @click="addCameraBtn">增加设备</button>
+      <dlgcamera v-if="isDlgCamera" @dlgConfirmDlgCamera="confirmDlgCamera" @dlgCloseDlgCamera="closeDlgCamera"></dlgcamera>
+      <div class="searchCamera">
+        <!-- <input type="text" placeholder="输入设备手机号" v-model="cameraPhone" /> -->
+        <input type="text" placeholder="输入设备名称" v-model="cameraName" />
         <button @click="pageHandler(1)">查询</button>
       </div>
     </div>
-    <div class="divTabuser">
-      <table class="tabuser">
+    <div class="divTabCamera">
+      <table class="tabCamera">
         <tr>
-          <td>用户手机</td>
-          <td>用户名称</td>
-          <td>用户角色</td>
-          <td>用户头像</td>
-          <td>用户邮箱</td>
-          <td>用户权限</td>
-          <td>用户状态</td>
-          <!-- <td>父类用户</td> -->
-          <td>操作用户</td>
+          <td>相机编号{{camera.rows}}</td>
+          <td>相机识别码</td>
+          <td>相机名称</td>
+          <td>相机地址</td>
+          <td>相机状态</td>
+          <td>操作相机</td>
         </tr>
-        <tr v-for="item in users.rows" :key="item.id">
-          <td>{{item.userPhone}}</td>
-          <td v-if="item.userName">{{item.userName}}</td>
-          <td v-else>未填写用户名称</td>
-          <!-- <td>{{item.userRole}}</td> -->
-          <td v-if="item.userRole==0">超级用户</td>
-          <td v-else-if="item.userRole==1">集团用户</td>
-          <td v-else-if="item.userRole==2">项目用户</td>
-          <td v-else-if="item.userRole==3">普通用户</td>
-          <td v-else>未知用户角色</td>
-          <td v-if="item.userImg">{{item.userImg}}</td>
-          <td v-else>未填写用户头像</td>
-          <td v-if="item.userMail">{{item.userMail}}</td>
-          <td v-else>未填写用户邮箱</td>
-          <td>{{item.userPermissionId}}</td>
-          <!-- <td>{{item.userStatus}}</td> -->
-          <td v-if="item.userStatus==0" style="color: red">锁定</td>
-          <td v-else-if="item.userStatus==1" style="color: green">正常</td>
-          <td v-else>未知状态</td>
-          <!-- <td>{{item.userParentId}}</td> -->
+        <tr v-for="item in cameras.rows" :key="item.id">
+          <td v-if="item.cameraNo">{{item.cameraNo}}</td>
+          <td v-else>—</td>
+          <td v-if="item.cameraCode">{{item.cameraCode}}</td>
+          <td v-else>—</td>
+          <td v-if="item.cameraName">{{item.cameraName}}</td>
+          <td v-else>—</td>
+          <td v-if="item.cameraIp">{{item.cameraIp}}</td>
+          <td v-else>—</td>
+          <td v-if="item.cameraStatus">{{item.cameraStatus}}</td>
+          <td v-else>—</td>
           <td>
-            <a href="#" @click.prevent="updateUser(item.userId)">修改</a>
-            <a href="#" @click.prevent="deleteUser(item.userId)">删除</a>
+            <a href="#" @click.prevent="updateCamera(item.cameraId)">修改</a>
+            <a href="#" @click.prevent="deleteCamera(item.cameraId)">删除</a>
           </td>
         </tr>
       </table>
@@ -53,8 +40,8 @@
         <zpagenav
           v-bind:page="page"
           v-bind:page-size="5"
-          v-bind:total="users.total"
-          v-bind:max-page="users.total"
+          v-bind:total="cameras.total"
+          v-bind:max-page="cameras.total"
           v-on:pagehandler="pageHandler"
         ></zpagenav>
       </div>
@@ -62,23 +49,22 @@
   </div>
 </template>
 <script type='text/ecmascript-6'>
-import dlguser from "../dlguser/dlguser.vue";
-import dlgconfirm from "../dlgconfirm/dlgconfirm.vue";
+import dlgcamera from "../dlgcamera/dlgcamera.vue";
+// import dlgconfirm from "../dlgConfirm/dlgConfirm.vue";
 import zpagenav from "../../components/zpageNav/zpageNav.vue";
 import { mapState } from "vuex";
-import { reqAddUser, reqDeleteUserById, reqUpdateUser } from "../../api";
+import { reqAddCamera, reqDeleteCameraById, reqUpdateCamera } from "../../api";
 export default {
-  name: "mysetuser",
+  name: "mysetCamera",
   components: {
-    dlgconfirm,
-    dlguser,
+    // dlgconfirm,
+    dlgcamera,
     zpagenav
   },
   data() {
     return {
-      userName: "",
-      userPhone: "",
-      isDlgUser: false,
+      cameraName: "",
+      isDlgCamera: false,
       page: 1, //  显示的是哪一页
       pageSize: 5, //  每一页显示的数据条数
       total: 0, //  记录总数
@@ -90,79 +76,75 @@ export default {
     this.pageHandler(1);
   },
   mounted() {
-    // this.$store.dispatch("selectAllUser");
-    // this.$store.dispatch("selectUserByPage", 1, this.userName);
+    this.$store.dispatch("selectCameraById", 1);// 初始化vuex中的camera
   },
   computed: {
-    ...mapState(["user", "users", "lcAcsB128", "lcAcs", "address", "categorys"])
+    ...mapState(["camera", "cameras", "lcAcsB128", "lcAcs", "address", "categorys"])
   },
   methods: {
-    selectUserByIf() {},
-    addUserBtn() {
-      var userTemp = {
-        userId: "",
-        userPhone: "",
-        userPassword: "",
-        userName: "",
-        userRole: "",
-        userImg: "",
-        userMail: "",
-        userPermission: "",
-        userStatus: "",
-        userParentId: ""
+    selectCameraByIf() {},
+    addCameraBtn() {
+      var cameraTemp = {
+        cameraId: "",
+        cameraCode: "",
+        cameraName: "",
+        cameraIp: "",
+        cameraApiKey: "",
+        cameraSecret: "",
+        cameraSerialNumber: "",
+        cameraRemark: "",
+        cameraStatus: ""
       };
-      this.$store.dispatch("clearUserVal", userTemp);
-      this.isDlgUser = true;
+      this.$store.dispatch("clearCameraVal", cameraTemp);
+      this.isDlgCamera = true;
     },
-    async updateUser(userId) {
-      // console.log(userId)
-      await this.$store.dispatch("selectUserById", userId);// 等待异步执行完成
-      this.isDlgUser = true;
+    async updateCamera(cameraId) {
+      await this.$store.dispatch("selectCameraById", cameraId);// 等待异步执行完成
+      this.isDlgCamera = true;
     },
-    deleteUser(userId) {
-      reqDeleteUserById(userId);
+    deleteCamera(cameraId) {
+      reqDeleteCameraById(cameraId);
       this.pageHandler(this.page);
     },
-    confirmDlgUser(user) {
-      if (user.userId !== "") {
-        reqUpdateUser(user); // 修改一个用户
+    confirmDlgCamera(camera) {
+      if (camera.cameraId !== "") {
+        reqUpdateCamera(camera); // 修改一个设备
       } else {
-        reqAddUser(user); // 增加一个用户
+        reqAddCamera(camera); // 增加一个设备
       }
       this.pageHandler(this.page);
-      this.isDlgUser = false;
+      this.isDlgCamera = false;
     },
-    closeDlgUser() {
-      this.isDlgUser = false;
+    closeDlgCamera() {
+      this.isDlgCamera = false;
     },
     //  pagehandler方法 跳转到page页
     pageHandler: function(page) {
       // here you can do custom state update
       this.page = page;
-      // this.$store.dispatch("selectUserByPage", page, this.userName);
-      this.$store.dispatch("selectUserByPage", {
+      // this.$store.dispatch("selectCameraByPage", page, this.cameraName);
+      this.$store.dispatch("selectCameraByPage", {
         pageNum: page,
-        userPhone: this.userPhone,
-        userName: this.userName
+        cameraName: this.cameraName
       });
     }
   }
 };
 </script>
 <style lang='stylus' rel='stylesheet/stylus'>
-#mysetuser
+#mysetCamera
   background-color red
-  .headeruser
+  .headerCamera
     background-color red
     display inline
-    .btnAdduser
+    .btnAddCamera
       position absolute
       top 30px
       left 50px
       width 80px
       height 30px
       border-radius 3px
-    .searchuser
+    .searchCamera
       position absolute
       top 30px
       right 50px
@@ -176,13 +158,13 @@ export default {
         height 30px
         margin-left 10px
         border-radius 3px
-  .divTabuser
+  .divTabCamera
     position absolute
     left 50px
     // width 1100px
     margin-top 120px
     // background-color green
-    .tabuser
+    .tabCamera
       tr
         td
           padding 10px 25px

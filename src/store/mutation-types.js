@@ -1,6 +1,15 @@
 /*
 mutation type 常量名称模块
 */
+// operationlog
+export const RECEIVE_OPERATIONLOG = 'receive_operationlog'
+export const RECEIVE_OPERATIONLOGS = 'receive_operationlogs'
+// alarmlog
+export const RECEIVE_ALARMLOG = 'receive_alarmlog'
+export const RECEIVE_ALARMLOGS = 'receive_alarmlogs'
+// camera
+export const RECEIVE_CAMERA = 'receive_camera'
+export const RECEIVE_CAMERAS = 'receive_cameras'
 // device
 export const RECEIVE_DEVICE = 'receive_device'
 export const RECEIVE_DEVICES = 'receive_devices'

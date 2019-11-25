@@ -1,5 +1,14 @@
 export default {
     pageSize: 5,
+    // operationLog
+    operationLog: {},
+    operationLogs: {name: 'operationLogsss'},
+    // alarmLog
+    alarmLog: {},
+    alarmLogs: {name: 'alarmLogsss'},
+    // camera
+    camera: {},
+    cameras: {name: 'camerasss'},
     // device
     device: {},
     devices: {name: 'devicesss'},

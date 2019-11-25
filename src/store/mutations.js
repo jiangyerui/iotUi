@@ -2,6 +2,12 @@
 vuex 的mutations 模块
 */
 import {
+    RECEIVE_OPERATIONLOG,
+    RECEIVE_OPERATIONLOGS,
+    RECEIVE_ALARMLOG,
+    RECEIVE_ALARMLOGS,
+    RECEIVE_CAMERA,
+    RECEIVE_CAMERAS,
     RECEIVE_DEVICE,
     RECEIVE_DEVICES,
     RECEIVE_PROJECT,
@@ -14,6 +20,28 @@ import {
     RECEIVE_LCACS
 } from './mutation-types'
 export default {
+    // operationlog
+    [RECEIVE_OPERATIONLOG] (state, { operationLog }) {
+        state.operationLog = operationLog
+    },
+    [RECEIVE_OPERATIONLOGS] (state, { operationLogs }) {
+        state.operationLogs = operationLogs
+        // console.log("operationLogs:"+state.operationLogs)
+    },
+    // alarmlog
+    [RECEIVE_ALARMLOG] (state, { alarmLog }) {
+        state.alarmLog = alarmLog
+    },
+    [RECEIVE_ALARMLOGS] (state, { alarmLogs }) {
+        state.alarmLogs = alarmLogs
+    },
+    // camera
+    [RECEIVE_CAMERA] (state, { camera }) {
+        state.camera = camera
+    },
+    [RECEIVE_CAMERAS] (state, { cameras }) {
+        state.cameras = cameras
+    },
     // device
     [RECEIVE_DEVICE] (state, { device }) {
         state.device = device

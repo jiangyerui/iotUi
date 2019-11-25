@@ -2,9 +2,12 @@
   <div id="mysetProject">
     <div class="headerProject">
       <button class="btnAddProject" @click="addProjectBtn">增加项目</button>
-      <dlgproject v-if="isDlgProject" @dlgConfirmDlgProject="confirmDlgProject" @dlgCloseDlgProject="closeDlgProject"></dlgproject>
+      <dlgproject
+        v-if="isDlgProject"
+        @dlgConfirmDlgProject="confirmDlgProject"
+        @dlgCloseDlgProject="closeDlgProject"
+      ></dlgproject>
       <div class="searchProject">
-        <!-- <input type="text" placeholder="输入项目手机号" v-model="projectPhone" /> -->
         <input type="text" placeholder="输入项目名称" v-model="projectName" />
         <button @click="pageHandler(1)">查询</button>
       </div>
@@ -17,9 +20,9 @@
           <td>项目管理</td>
           <!-- <td>项目地址</td> -->
           <td>详细地址</td>
-          <td>项目图片</td>
-          <td>逃生图片</td>
-          <!-- <td>开启时间</td> -->
+          <!-- <td>项目图片</td> -->
+          <!-- <td>逃生图片</td> -->
+          <td>开启时间</td>
           <!-- <td>运行期限</td> -->
           <td>到期提醒</td>
           <td>权限状态</td>
@@ -28,29 +31,35 @@
         </tr>
         <tr v-for="item in projects.rows" :key="item.id">
           <td v-if="item.projectName">{{item.projectName}}</td>
-          <td v-else>未填写项目名称</td>
+          <td v-else>—</td>
           <td v-if="item.projectIntroduce">{{item.projectIntroduce}}</td>
-          <td v-else>未填写项目简介</td>
+          <td v-else>—</td>
           <td v-if="item.projectUserId">{{item.projectUserId}}</td>
-          <td v-else>未填写项目管理</td>
+          <td v-else>—</td>
           <!-- <td v-if="item.projectPermission">{{item.projectPermission}}</td>
-          <td v-else>未填写项目地址</td> -->
+          <td v-else>未填写项目地址</td>-->
           <td v-if="item.projectAddress">{{item.projectAddress}}</td>
-          <td v-else>未填写详细地址</td>
-          <td v-if="item.projectImg">{{item.projectImg}}</td>
+          <td v-else>—</td>
+          <!-- <td v-if="item.projectImg">{{item.projectImg}}</td>
           <td v-else>未填写项目图片</td>
           <td v-if="item.projectCad">{{item.projectCad}}</td>
-          <td v-else>未填写逃生图片</td>
-          <!-- <td v-if="item.projectStartTime">{{item.projectStartTime}}</td>
-          <td v-else>未填写开启时间</td>
-          <td v-if="item.projectExpire">{{item.projectExpire}}</td>
-          <td v-else>未填写运行期限</td> -->
+          <td v-else>未填写逃生图片</td> -->
+          <td v-if="item.projectStartTime">{{item.projectStartTime | dateFormat('yyyy-mm-DD')}}</td>
+          <td v-else>—</td>
+          <!--<td v-if="item.projectExpire">{{item.projectExpire}}</td>
+          <td v-else>未填写运行期限</td>-->
           <td v-if="item.projectNotify">{{item.projectNotify}}</td>
-          <td v-else>未填写到期提醒</td>
-          <td v-if="item.projectPermissionStatus">{{item.projectPermissionStatus}}</td>
-          <td v-else>未填写权限状态</td>
-          <td v-if="item.projectUseStatus">{{item.projectUseStatus}}</td>
-          <td v-else>未填写使用状态</td>
+          <td v-else>—</td>
+          <td
+            :class="projectPermissionStatusList[item.projectPermissionStatus].class"
+            v-if="item.projectPermissionStatus"
+          >{{projectPermissionStatusList[item.projectPermissionStatus].name}}</td>
+          <td v-else>—</td>
+          <td
+            :class="projectUseStatusList[item.projectUseStatus].class"
+            v-if="item.projectUseStatus"
+          >{{projectUseStatusList[item.projectUseStatus].name}}</td>
+          <td v-else>—</td>
           <td>
             <a href="#" @click.prevent="updateProject(item.projectId)">修改</a>
             <a href="#" @click.prevent="deleteProject(item.projectId)">删除</a>
@@ -71,19 +80,37 @@
 </template>
 <script type='text/ecmascript-6'>
 import dlgproject from "../dlgproject/dlgproject.vue";
-// import dlgconfirm from "../dlgConfirm/dlgConfirm.vue";
 import zpagenav from "../../components/zpageNav/zpageNav.vue";
 import { mapState } from "vuex";
-import { reqAddProject, reqDeleteProjectById, reqUpdateProject } from "../../api";
+import {
+  reqAddProject,
+  reqDeleteProjectById,
+  reqUpdateProject
+} from "../../api";
 export default {
   name: "mysetProject",
   components: {
-    // dlgconfirm,
     dlgproject,
     zpagenav
   },
   data() {
     return {
+      classError: "",
+      classWarn: "",
+      classInfo: "",
+      projectPermissionStatusList: [
+        { class: "", name: "" },
+        { class: "classError", name: "上锁" },
+        { class: "classInfo", name: "正常" },
+        { class: "classWarn", name: "提醒" },
+        { class: "classError", name: "到期" }
+      ],
+      projectUseStatusList: [
+        { class: "", name: "" },
+        { class: "classError", name: "试用" },
+        { class: "classInfo", name: "运行" },
+        { class: "classWarn", name: "停用" }
+      ],
       projectName: "",
       isDlgProject: false,
       page: 1, //  显示的是哪一页
@@ -97,11 +124,19 @@ export default {
     this.pageHandler(1);
   },
   mounted() {
-    this.$store.dispatch("selectProjectById", 1);// 初始化vuex中的project
+    this.$store.dispatch("selectProjectById", 1); // 初始化vuex中的project
   },
   computed: {
-    ...mapState(["project", "projects", "lcAcsB128", "lcAcs", "address", "categorys"])
+    ...mapState([
+      "project",
+      "projects",
+      "lcAcsB128",
+      "lcAcs",
+      "address",
+      "categorys"
+    ])
   },
+  watch: {},
   methods: {
     selectProjectByIf() {},
     addProjectBtn() {
@@ -110,13 +145,15 @@ export default {
         projectName: "",
         projectIntroduce: "",
         projectImg: "",
-        projectUserId: ""
+        projectUserId: "",
+        projectStartTime: "",
+        projectExpireTime: ""
       };
       this.$store.dispatch("clearProjectVal", projectTemp);
       this.isDlgProject = true;
     },
     async updateProject(projectId) {
-      await this.$store.dispatch("selectProjectById", projectId);// 等待异步执行完成
+      await this.$store.dispatch("selectProjectById", projectId); // 等待异步执行完成
       this.isDlgProject = true;
     },
     deleteProject(projectId) {
@@ -137,9 +174,7 @@ export default {
     },
     //  pagehandler方法 跳转到page页
     pageHandler: function(page) {
-      // here you can do custom state update
       this.page = page;
-      // this.$store.dispatch("selectProjectByPage", page, this.projectName);
       this.$store.dispatch("selectProjectByPage", {
         pageNum: page,
         projectName: this.projectName
@@ -187,6 +222,12 @@ export default {
           padding 10px 25px
           border 1px solid #000
           color #E7EAED
+      .classError
+        color red
+      .classWarn
+        color yellow
+      .classInfo
+        color green
       tr:nth-child(odd)
         background-color #131313
       tr:nth-child(even)
