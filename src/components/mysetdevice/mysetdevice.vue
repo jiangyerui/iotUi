@@ -1,8 +1,11 @@
 <template>
   <div id="mysetDevice">
     <div class="headerDevice">
+      <!-- <button class="btnAddDevice" v-if="usercurrent.userRole !== 4" @click="addDeviceBtn">增加设备</button> -->
       <button class="btnAddDevice" @click="addDeviceBtn">增加设备</button>
       <dlgdevice
+        v-bind:childdevicetree="parentdevicetree"
+        v-bind:childdevicetree2="parentdevicetree2"
         v-if="isDlgDevice"
         @dlgConfirmDlgDevice="confirmDlgDevice"
         @dlgCloseDlgDevice="closeDlgDevice"
@@ -26,26 +29,31 @@
           <td>操作设备</td>
         </tr>
         <tr v-for="item in devices.rows" :key="item.id">
-          <td v-if="item.deviceNo">{{item.deviceNo}}</td>
+          <td v-if="item.device.deviceNo">{{item.device.deviceNo}}</td>
           <td v-else>—</td>
-          <td v-if="item.deviceName">{{item.deviceName}}</td>
-          <td v-else>—</td>
-          <td v-if="item.devicePermission">{{devicePermissionList[item.devicePermission]}}</td>
-          <td v-else>—</td>
-          <td v-if="item.deviceCompanyId">{{item.deviceCompanyId}}</td>
-          <td v-else>—</td>
-          <td v-if="item.deviceProjectId">{{item.deviceProjectId}}</td>
-          <td v-else>—</td>
-          <td v-if="item.deviceCameraId">{{item.deviceCameraId}}</td>
+          <td v-if="item.device.deviceName">{{item.device.deviceName}}</td>
           <td v-else>—</td>
           <td
-            :class="deviceStatusList[item.deviceStatus].class"
-            v-if="item.deviceStatus"
-          >{{deviceStatusList[item.deviceStatus].name}}</td>
+            v-if="item.device.devicePermission"
+          >{{devicePermissionList[item.device.devicePermission]}}</td>
+          <td v-else>—</td>
+          <td v-if="item.device.deviceCompanyId">{{item.company.companyName}}</td>
+          <td v-else>—</td>
+          <td v-if="item.device.deviceProjectId">{{item.project.projectName}}</td>
+          <td v-else>—</td>
+          <td v-if="item.device.deviceCameraId">{{item.camera.cameraName}}</td>
+          <td v-else>—</td>
+          <td
+            :class="deviceStatusList[item.device.deviceStatus].class"
+            v-if="item.device.deviceStatus"
+          >{{deviceStatusList[item.device.deviceStatus].name}}</td>
           <td v-else>—</td>
           <td>
-            <a href="#" @click.prevent="updateDevice(item.deviceId)">修改</a>
-            <a href="#" @click.prevent="deleteDevice(item.deviceId)">删除</a>
+            <a
+              href="#"
+              @click.prevent="updateDevice(item.device.deviceId,item.device.deviceCompanyId,item.device.deviceProjectId)"
+            >修改</a>
+            <a href="#" @click.prevent="deleteDevice(item.device.deviceId)">删除</a>
           </td>
         </tr>
       </table>
@@ -76,6 +84,8 @@ export default {
   },
   data() {
     return {
+      parentdevicetree: {},
+      parentdevicetree2: {},
       classError: "",
       classWarn: "",
       classInfo: "",
@@ -104,15 +114,18 @@ export default {
       maxPage: 9 // 最大页数
     };
   },
-  created: function() {
+  created: function () {
     //  created  表示页面加载完毕，立即执行
     this.pageHandler(1);
   },
   mounted() {
     this.$store.dispatch("selectDeviceById", 1); // 初始化vuex中的device
+    this.$store.dispatch("selectDeviceTreeByCurrentUser");
   },
   computed: {
     ...mapState([
+      "usercurrent",
+      "devicecompanys",
       "device",
       "devices",
       "lcAcsB128",
@@ -122,36 +135,63 @@ export default {
     ])
   },
   methods: {
-    selectDeviceByIf() {},
+    selectDeviceByIf() { },
     addDeviceBtn() {
       var deviceTemp = {
-        deviceId: "",
-        deviceNo: "",
-        deviceName: "",
-        devicePermission: "",
-        deviceCompanyId: "",
-        deviceProjectId: "",
-        deviceIntroduce: "",
-        deviceCameraId: "",
-        deviceStatus: ""
+        device: {
+          deviceId: ""
+          // deviceNo: "",
+          // deviceName: "",
+          // devicePermission: "",
+          // deviceCompanyId: "",
+          // deviceProjectId: "",
+          // deviceIntroduce: "",
+          // deviceCameraId: "",
+          // deviceStatus: ""
+        },
+        company: {
+          companyId: ""
+        },
+        project: {
+          projectId: ""
+        },
+        camera: {
+          cameraId: ""
+        }
       };
       this.$store.dispatch("clearDeviceVal", deviceTemp);
       this.isDlgDevice = true;
     },
-    async updateDevice(deviceId) {
+    async updateDevice(deviceId, companyId, projectId) {
       await this.$store.dispatch("selectDeviceById", deviceId); // 等待异步执行完成
+      this.devicecompanys.forEach(item => {
+        if (item.company.companyId === companyId) {
+          this.parentdevicetree = item;
+        }
+      })
+      this.parentdevicetree.deviceProjects.forEach(ite => {
+        if (ite.project.projectId === projectId) {
+          this.parentdevicetree2 = ite
+        }
+      })
       this.isDlgDevice = true;
     },
     deleteDevice(deviceId) {
-      reqDeleteDeviceById(deviceId);
-      this.pageHandler(this.page);
+      var a = window.confirm("确认要删除吗？")
+      if (a) {
+        reqDeleteDeviceById(deviceId);
+        this.pageHandler(this.page);
+        alert("删除成功！")
+      } else {
+      }
     },
     confirmDlgDevice(device) {
-      if (device.deviceId !== "") {
+      if (this.device.device.deviceId !== "") {
         reqUpdateDevice(device); // 修改一个设备
       } else {
         reqAddDevice(device); // 增加一个设备
       }
+      this.$store.dispatch("selectDeviceTreeByCurrentUser");// 有增加或更新了，就得重新放一次招
       this.pageHandler(this.page);
       this.isDlgDevice = false;
     },
@@ -159,7 +199,7 @@ export default {
       this.isDlgDevice = false;
     },
     //  pagehandler方法 跳转到page页
-    pageHandler: function(page) {
+    pageHandler: function (page) {
       // here you can do custom state update
       this.page = page;
       // this.$store.dispatch("selectDeviceByPage", page, this.deviceName);

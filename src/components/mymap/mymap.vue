@@ -1,7 +1,7 @@
 <template>
   <div>
-    <!-- <div id='allmap' class='allmap'></div> -->
-    <iframe id='myIframe' src='http://www.thingjs.com/pp/8e3b079e05059028856ef648' style="width:1530px;height:700px;"></iframe>
+    <div id='allmap' class='allmap'></div>
+    <!-- <iframe id='myIframe' src='http://www.thingjs.com/pp/8e3b079e05059028856ef648' style="width:1530px;height:700px;"></iframe> -->
   </div>
 </template>
 

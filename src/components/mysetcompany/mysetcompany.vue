@@ -1,8 +1,17 @@
 <template>
   <div id="mysetCompany">
     <div class="headerCompany">
-      <button class="btnAddCompany" @click="addCompanyBtn">增加集团</button>
-      <dlgcompany v-if="isDlgCompany" @dlgConfirmDlgCompany="confirmDlgCompany" @dlgCloseDlgCompany="closeDlgCompany"></dlgcompany>
+      <!-- 只有超级管理员才能增加集团 -->
+      <button
+        class="btnAddCompany"
+        @click="addCompanyBtn"
+        v-if="usercurrent.userRole===1"
+      >增加集团</button>
+      <dlgcompany
+        v-if="isDlgCompany"
+        @dlgConfirmDlgCompany="confirmDlgCompany"
+        @dlgCloseDlgCompany="closeDlgCompany"
+      ></dlgcompany>
       <div class="searchCompany">
         <!-- <input type="text" placeholder="输入集团手机号" v-model="companyPhone" /> -->
         <input type="text" placeholder="输入集团名称" v-model="companyName" />
@@ -15,21 +24,21 @@
           <td>集团名称</td>
           <td>集团简介</td>
           <td>集团管理</td>
-          <td>访问权限</td>
+          <!-- <td>访问权限</td> -->
           <td>操作集团</td>
         </tr>
-        <tr v-for="item in companys.rows" :key="item.id">
-          <td v-if="item.companyName">{{item.companyName}}</td>
+        <tr v-for="item in companys.rows" :key="item.company.companyId">
+          <td v-if="item.company.companyName">{{item.company.companyName}}</td>
           <td v-else>—</td>
-          <td v-if="item.companyIntroduce">{{item.companyIntroduce}}</td>
+          <td v-if="item.company.companyIntroduce">{{item.company.companyIntroduce}}</td>
           <td v-else>—</td>
-          <td v-if="item.companyUserId">{{item.companyUserId}}</td>
+          <td v-if="item.company.companyUserId">{{item.user.userName}}</td>
           <td v-else>—</td>
-          <td v-if="item.companyPermission">{{item.companyPermission}}</td>
-          <td v-else>—</td>
+          <!-- <td v-if="item.companyPermission">{{item.companyPermission}}</td> -->
+          <!-- <td v-else>—</td> -->
           <td>
-            <a href="#" @click.prevent="updateCompany(item.companyId)">修改</a>
-            <a href="#" @click.prevent="deleteCompany(item.companyId)">删除</a>
+            <a href="#" @click.prevent="updateCompany(item.company.companyId)">修改</a>
+            <a href="#" @click.prevent="deleteCompany(item.company.companyId)">删除</a>
           </td>
         </tr>
       </table>
@@ -68,7 +77,7 @@ export default {
       maxPage: 9 // 最大页数
     };
   },
-  created: function() {
+  created: function () {
     //  created  表示页面加载完毕，立即执行
     this.pageHandler(1);
   },
@@ -77,10 +86,10 @@ export default {
     // this.$store.dispatch("selectCompanyByPage", 1, this.companyName);
   },
   computed: {
-    ...mapState(["company", "companys", "lcAcsB128", "lcAcs", "address", "categorys"])
+    ...mapState(["usercurrent", "user", "company", "companys", "lcAcsB128", "lcAcs", "address", "categorys"])
   },
   methods: {
-    selectCompanyByIf() {},
+    selectCompanyByIf() { },
     addCompanyBtn() {
       var companyTemp = {
         companyId: "",
@@ -97,8 +106,13 @@ export default {
       this.isDlgCompany = true;
     },
     deleteCompany(companyId) {
-      reqDeleteCompanyById(companyId);
-      this.pageHandler(this.page);
+      var a = window.confirm("确认要删除吗？")
+      if (a) {
+        reqDeleteCompanyById(companyId);
+        this.pageHandler(this.page);
+        alert("删除成功！")
+      } else {
+      }
     },
     confirmDlgCompany(company) {
       if (company.companyId !== "") {
@@ -113,7 +127,7 @@ export default {
       this.isDlgCompany = false;
     },
     //  pagehandler方法 跳转到page页
-    pageHandler: function(page) {
+    pageHandler: function (page) {
       // here you can do custom state update
       this.page = page;
       // this.$store.dispatch("selectCompanyByPage", page, this.companyName);

@@ -5,35 +5,43 @@
       <div class="contextDevice">
         <div class="contextDeviceItem">
           <label>设备编号:</label>
-          <input type="text" placeholder="请输入正确的设备编号" v-model="device.deviceNo" />
+          <input type="text" placeholder="请输入正确的设备编号" v-model="device.device.deviceNo" />
         </div>
         <div class="contextDeviceItem">
           <label>设备名称:</label>
-          <input type="text" placeholder="请不要超过20个字符" v-model="device.deviceName" />
+          <input type="text" placeholder="请不要超过20个字符" v-model="device.device.deviceName" />
         </div>
         <div class="contextDeviceItem">
           <label>所属系列:</label>
           <!-- <input type="texts" placeholder="请不要超过20个字符" v-model="device.devicePermission" /> -->
-          <select class="" v-model="device.devicePermission" @change="getSelectedDeviceStatus">
+          <select class="" v-model="device.device.devicePermission" @change="getSelectedDeviceStatus">
             <option :value="item.id" v-for="item in devicePermissionList" :key="item.id">{{item.name}}</option>
           </select>
         </div>
         <div class="contextDeviceItem">
           <label>所属集团:</label>
-          <input type="text" placeholder="请不超过20个字符" v-model="device.deviceCompanyId" />
+          <!-- <input type="text" placeholder="请不超过20个字符" v-model="device.deviceCompanyId" /> -->
+          <select class="" v-model="childdevicetree" @change="companyChange()">
+            <option :value="item" v-for="item in devicecompanys" :key="item.id">{{item.company.companyName}}</option>
+          </select>
         </div>
         <div class="contextDeviceItem">
           <label>所属项目:</label>
-          <input type="text" placeholder="请输入11位手机号" v-model="device.deviceProjectId" />
+          <!-- <input type="text" placeholder="请输入11位手机号" v-model="device.deviceProjectId" /> -->
+          <select class="" v-model="childdevicetree2" @change="projectChange()">
+            <option :value="item" v-for="item in childdevicetree.deviceProjects" :key="item.id">{{item.project.projectName}}</option>
+          </select>
         </div>
         <div class="contextDeviceItem">
           <label>关联相机:</label>
-          <input type="password" placeholder="请不要超过20个字符" v-model="device.deviceCameraId" />
+          <select class="" v-model="device.device.deviceCameraId" @change="cameraChange()">
+            <option :value="item.cameraId" v-for="item in childdevicetree2.cameras" :key="item.id">{{item.cameraName}}</option>
+          </select>
         </div>
         <div class="contextDeviceItem">
           <label>设备状态:</label>
           <!-- <input type="password" placeholder="请不要超过20个字符" v-model="device.deviceStatus" /> -->
-          <select class="" v-model="device.deviceStatus" @change="getSelectedDeviceStatus">
+          <select class="" v-model="device.device.deviceStatus" @change="getSelectedDeviceStatus">
             <option :value="item.id" v-for="item in selectDeviceStatusList" :key="item.id">{{item.name}}</option>
           </select>
         </div>
@@ -49,8 +57,10 @@
 import { mapState } from "vuex";
 export default {
   name: "dlgdevice",
+  props: ["childdevicetree","childdevicetree2"],
   data() {
     return {
+      myDeviceProjects: {},
       selectDeviceStatusList: [
         { id: 0, name: "" },
         { id: 1, name: "试用" },
@@ -95,7 +105,7 @@ export default {
   },
   created() {},
   computed: {
-    ...mapState(["device", "devices", "lcAcsB128", "lcAcs", "address", "categorys"])
+    ...mapState(["mydeviceprojects","devicecompanys","device", "devices", "lcAcsB128", "lcAcs", "address", "categorys"])
   },
   methods: {
     dlgConfirm() {
@@ -104,7 +114,16 @@ export default {
     dlgClose() {
       this.$emit("dlgCloseDlgDevice");
     },
-    getSelectedDeviceStatus() {}
+    getSelectedDeviceStatus() {},
+    async companyChange() {
+      // await this.$store.dispatch("clearMyDeviceProjectVal", this.myDeviceProjects); // 等待异步执行完成
+      this.device.device.deviceCompanyId = this.childdevicetree.company.companyId
+    },
+    projectChange() {
+      // this.myDeviceProjects = this.mydeviceprojects
+      this.device.device.deviceProjectId = this.childdevicetree2.project.projectId
+    },
+    cameraChange() {}
   }
 };
 </script>

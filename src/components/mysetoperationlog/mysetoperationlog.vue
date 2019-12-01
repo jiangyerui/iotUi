@@ -14,20 +14,23 @@
         <tr>
           <!-- <td>操作编号</td> -->
           <td>操作时间</td>
-          <td>操作设备</td>
-          <td>操作人员</td>
+          <td>操作类型</td>
+          <td>操作设备编号</td>
+          <td>操作人员编号</td>
           <td>操作结果</td>
           <td>管理操作</td>
         </tr>
         <tr v-for="item in operationLogs.rows" :key="item.id">
-          <td v-if="item.operationTime">{{item.operationTime}}</td>
+          <td v-if="item.operationTime">{{item.operationTime | dateFormat("yyyy-MM-dd hh:mm:ss")}}</td>
           <td v-else>未填写操作时间</td>
-          <td v-if="item.operationType">{{item.operationType}}</td>
+          <td v-if="item.operationType">{{item.operationType===1?'复位':'消音'}}</td>
           <td v-else>未填写操作类型</td>
           <td v-if="item.operationDeviceId">{{item.operationDeviceId}}</td>
           <td v-else>未填写操作设备</td>
           <td v-if="item.operationUserId">{{item.operationUserId}}</td>
           <td v-else>未填写操作人员</td>
+          <td v-if="item.operationResult">{{item.operationResult===1?'成功':'失败'}}</td>
+          <td v-else>未填写操作结果</td>
           <td>
             <a href="#" @click.prevent="deleteOperationLog(item.operationLogId)">删除</a>
           </td>
@@ -68,7 +71,7 @@ export default {
       maxPage: 9 // 最大页数
     };
   },
-  created: function() {
+  created: function () {
     //  created  表示页面加载完毕，立即执行
     this.pageHandler(1);
   },
@@ -79,7 +82,7 @@ export default {
     ...mapState(["operationLog", "operationLogs", "lcAcsB128", "lcAcs", "address", "categorys"])
   },
   methods: {
-    selectOperationLogByIf() {},
+    selectOperationLogByIf() { },
     addOperationLogBtn() {
       var operationLogTemp = {
         operationLogId: "",
@@ -100,8 +103,13 @@ export default {
       this.isDlgOperationLog = true;
     },
     deleteOperationLog(operationLogId) {
-      reqDeleteOperationLogById(operationLogId);
-      this.pageHandler(this.page);
+      var a = window.confirm("确认要删除吗？")
+      if (a) {
+        reqDeleteOperationLogById(operationLogId);
+        this.pageHandler(this.page);
+        alert("删除成功！")
+      } else {
+      }
     },
     confirmDlgOperationLog(operationLog) {
       if (operationLog.operationLogId !== "") {
@@ -116,7 +124,7 @@ export default {
       this.isDlgOperationLog = false;
     },
     //  pagehandler方法 跳转到page页
-    pageHandler: function(page) {
+    pageHandler: function (page) {
       // here you can do custom state update
       this.page = page;
       // this.$store.dispatch("selectoperationLogByPage", page, this.operationLogName);
@@ -124,6 +132,34 @@ export default {
         pageNum: page,
         operationLogName: this.operationLogName
       });
+    }
+  },
+  filters: {
+    dateFormat: function (dateStr, pattern) {
+      var dt = new Date(dateStr)
+      var y = dt.getFullYear()
+      var m = dt.getMonth() + 1
+      var d = dt.getDate()
+      // return y + '-' + m + '-' + d
+      if (pattern.toLowerCase() === 'yyyy-mm-dd') {
+        // return '$(y)-$(m)-$(d)'
+        return y + '-' + m + '-' + d
+      } else {
+        var hh = dt.getHours()
+        var mm = dt.getMinutes()
+        var ss = dt.getSeconds()
+        if (hh < 10) {
+          hh = '0' + hh
+        }
+        if (mm < 10) {
+          mm = '0' + mm
+        }
+        if (ss < 10) {
+          ss = '0' + ss
+        }
+        // return '$(y)-$(m)-$(d) $(hh):$(mm):$(ss)'
+        return y + '-' + m + '-' + d + ' ' + hh + ':' + mm + ':' + ss
+      }
     }
   }
 };

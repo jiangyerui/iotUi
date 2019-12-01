@@ -8,9 +8,17 @@ export const reqAddUser = (user) => ajaxPost('/platform/user/addUser/',user)
 // 删除一个用户
 export const reqDeleteUserById = (userId) => ajaxDelete('/platform/user/deleteUserById/'+userId)
 // 修改一个用户
-export const reqUpdateUser = (user) => ajaxPut('/platform/user/updateUser/',user)
+export const reqUpdateUser = (user) => ajaxPut('/platform/user/updateUser',user)
 // 查询一个用户
 export const reqSelectUserById = (userId) => ajaxGet('/platform/user/selectUserById/'+userId)
+// 查询当前登陆用户
+export const reqSelectCurrentUser = () => ajaxGet('/platform/user/selectCurrentUser')
+// 查询用户树
+export const reqSelectUsersTree = () => ajaxGet('/platform/user/selectUsersTree')
+// 根据用户ID，查询用户树枝
+export const reqSelectUserTreeByUserId = (userId) => ajaxGet('/platform/user/selectUserTreeByUserId/'+userId)
+// 根据项目ID，查询UserProject
+export const reqselectUserProjectByProjectId = (projectId) => ajaxGet('/platform/user/selectUserProjectByProjectId/'+projectId)
 // 查询所有用户
 export const reqSelectAllUser = () => ajaxGet('/platform/user/selectAllUser/')
 // 分页查询用户
@@ -54,6 +62,8 @@ export const reqSelectProjectByPage = ({pageNum,pageSize,projectName}) => ajaxGe
     pageSize,
     projectName
 })
+// 由当前登陆用户，查所有项目
+export const reqSelectAllProjectByCurrentUser = () => ajaxGet('/platform/project/selectAllProjectByCurrentUser/')
 
 // 增加一个设备
 export const reqAddDevice = (device) => ajaxPost('/platform/device/addDevice/',device)
@@ -71,6 +81,8 @@ export const reqSelectDeviceByPage = ({pageNum,pageSize,deviceName}) => ajaxGet(
     pageSize,
     deviceName
 })
+// 根据当前登陆用户查设备树
+export const reqSelectDeviceTreeByCurrentUser = () => ajaxGet('/platform/device/selectDeviceTreeByCurrentUser/')
 
 // 增加一个相机
 export const reqAddCamera = (camera) => ajaxPost('/platform/camera/addCamera/',camera)

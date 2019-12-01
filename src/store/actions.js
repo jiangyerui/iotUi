@@ -15,16 +15,22 @@ import {
     reqSelectDeviceById,
     reqSelectAllDevice,
     reqSelectDeviceByPage,
+    reqSelectDeviceTreeByCurrentUser,
     // project
     reqSelectProjectById,
     reqSelectAllProject,
     reqSelectProjectByPage,
+    reqSelectAllProjectByCurrentUser,
     // company
     reqSelectCompanyById,
     reqSelectAllCompany,
     reqSelectCompanyByPage,
     // user
     reqSelectUserById,
+    reqSelectCurrentUser,
+    reqSelectUsersTree,
+    reqSelectUserTreeByUserId,
+    reqselectUserProjectByProjectId,
     reqSelectAllUser,
     reqSelectUserByPage,
     // other
@@ -44,14 +50,21 @@ import {
     // device
     RECEIVE_DEVICE,
     RECEIVE_DEVICES,
+    RECEIVE_DEVICECOMPANYS,
+    RECEIVE_MYDEVICEPROJECTS,
     // project
     RECEIVE_PROJECT,
     RECEIVE_PROJECTS,
+    RECEIVE_PROJECTSCURRENT,
     // company
     RECEIVE_COMPANY,
     RECEIVE_COMPANYS,
     // user
     RECEIVE_USER,
+    RECEIVE_USERCURRENT,
+    RECEIVE_USERSTREE,
+    RECEIVE_USERTREE,
+    RECEIVE_USERPROJECTS,
     RECEIVE_USERS,
     // other
     RECEIVE_LCACSB128,
@@ -133,6 +146,14 @@ export default {
         const result = await reqSelectDeviceByPage({ pageNum, pageSize, devicePhone, deviceName })
         commit(RECEIVE_DEVICES, { devices: result })
     },
+    async selectDeviceTreeByCurrentUser({ commit }) {
+        const result = await reqSelectDeviceTreeByCurrentUser()
+        commit(RECEIVE_DEVICECOMPANYS, { devicecompanys: result })
+    },
+    async clearMyDeviceProjectVal({ commit }, mydeviceprojects) {
+        const result = mydeviceprojects
+        commit(RECEIVE_MYDEVICEPROJECTS, { mydeviceprojects: result })
+    },
     // project
     async clearProjectVal({ commit }, project) {
         const result = project
@@ -145,6 +166,10 @@ export default {
     async selectAllProject({ commit }) {
         const result = await reqSelectAllProject()
         commit(RECEIVE_PROJECTS, { projects: result })
+    },
+    async selectAllProjectByCurrentUser({ commit }) {
+        const result = await reqSelectAllProjectByCurrentUser()
+        commit(RECEIVE_PROJECTSCURRENT, { projectscurrent: result })
     },
     async selectProjectByPage({ commit, state }, { pageNum, projectPhone, projectName }) {
         const pageSize = state.pageSize
@@ -177,6 +202,26 @@ export default {
     async selectUserById({ commit }, userId) {
         const result = await reqSelectUserById(userId)
         commit(RECEIVE_USER, { user: result })
+    },
+    async selectCurrentUser({ commit }) {
+        const result = await reqSelectCurrentUser()
+        commit(RECEIVE_USERCURRENT, { usercurrent: result })
+    },
+    async selectUsersTree({ commit }) {
+        const result = await reqSelectUsersTree()
+        commit(RECEIVE_USERSTREE, { userstree: result })
+    },
+    async selectUserTreeByUserId({ commit }, userId) {
+        const result = await reqSelectUserTreeByUserId(userId)
+        commit(RECEIVE_USERTREE, { usertree: result })
+    },
+    async selectUserProjectByProjectId({ commit },projectId) {
+        const result = await reqselectUserProjectByProjectId(projectId)
+        commit(RECEIVE_USERPROJECTS, { userprojects: result })
+    },
+    async clearUseProjectVal({ commit }, userProject) {
+        const result = userProject
+        commit(RECEIVE_USERPROJECTS, { userprojects: result })
     },
     async selectAllUser({ commit }) {
         const result = await reqSelectAllUser()

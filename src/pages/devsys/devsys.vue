@@ -4,7 +4,7 @@
       <img src="../../common/img/logo.jpg" />
       <span>雪鹰云</span>
     </div>
-    <router-link class="myset" to="/myset">
+    <router-link class="myset" to="/myset/mysetuser">
       <img src="../myset/img/myset.png" />
       <font>系统配置</font>
     </router-link>

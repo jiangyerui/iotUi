@@ -4,20 +4,50 @@
       <div class="titleCamera">{{camera.cameraId==''?'增加相机':'编辑相机'}}</div>
       <div class="contextCamera">
         <div class="contextCameraItem">
-          <label>想要识别码:</label>
-          <input type="text" placeholder="请不要超过20个字符" v-model="camera.cameraCode" />
+          <label>识别码:</label>
+          <input type="text" placeholder="请不要超过20个字符" v-model="camera.camera.cameraCode" />
         </div>
         <div class="contextCameraItem">
           <label>相机名称:</label>
-          <input type="text" placeholder="请不要超过20个字符" v-model="camera.cameraName" />
+          <input type="text" placeholder="请不要超过20个字符" v-model="camera.camera.cameraName" />
         </div>
         <div class="contextCameraItem">
+          <label>所属项目:</label>
+          <!-- <input type="text" placeholder="请输入11位手机号" v-model="device.deviceProjectId" /> -->
+          <select class v-model="camera.camera.cameraProjectId" @change="projectChange()">
+            <option
+              :value="item.project.projectId"
+              v-for="item in projectscurrent"
+              :key="item.id"
+            >{{item.project.projectName}}</option>
+          </select>
+        </div>
+        <!-- <div class="contextCameraItem">
           <label>相机地址:</label>
-          <input type="text" placeholder="请不超过20个字符" v-model="camera.cameraIp" />
+          <input type="text" placeholder="请不超过20个字符" v-model="camera.camera.cameraIp" />
+        </div> -->
+        <div class="contextCameraItem">
+          <label>url:</label>
+          <input type="text" placeholder="请输入url" v-model="camera.camera.cameraUrl" />
+        </div>
+        <div class="contextCameraItem">
+          <label>apiKey:</label>
+          <input type="text" placeholder="请输入api-key" v-model="camera.camera.cameraApiKey" />
+        </div>
+        <div class="contextCameraItem">
+          <label>secret:</label>
+          <input type="text" placeholder="请输入secret" v-model="camera.camera.cameraSecret" />
+        </div>
+        <div class="contextCameraItem">
+          <label>serial:</label>
+          <input type="text" placeholder="请serial-number" v-model="camera.camera.cameraSerialNumber" />
         </div>
         <div class="contextCameraItem">
           <label>相机状态:</label>
-          <input type="text" placeholder="请不要超过20个字符" v-model="camera.cameraStatus" />
+          <!-- <input type="text" placeholder="请不要超过20个字符" v-model="camera.cameraStatus" /> -->
+          <select class="" v-model="camera.camera.cameraStatus">
+            <option :value="item.id" v-for="item in selectCameraStatusList" :key="item.id">{{item.name}}</option>
+          </select>
         </div>
       </div>
       <div class="btnDiv">
@@ -31,8 +61,15 @@
 import { mapState } from "vuex";
 export default {
   name: "dlgcamera",
+  props: ["childdevicetree"],
   data() {
     return {
+      selectCameraStatusList: [
+        { id: 0, name: "" },
+        { id: 1, name: "未知" },
+        { id: 2, name: "运行" },
+        { id: 3, name: "失联" }
+      ],
       cameraPasswordConfirm: "",
       cameraTemp: {
         cameraId: "",
@@ -45,7 +82,7 @@ export default {
         cameraCameraId: "",
         cameraStatus: ""
       },
-      selectCameraStatusList: [{ id: 0, name: "锁定" }, { id: 1, name: "正常" }],
+      // selectCameraStatusList: [{ id: 0, name: "锁定" }, { id: 1, name: "正常" }],
       selectCameraRoleList: [
         { id: 1, name: "设备用户" },
         { id: 2, name: "设备用户" },
@@ -57,9 +94,9 @@ export default {
   mounted() {
     // this.cameraPasswordConfirm = this.camera.cameraPassword;111
   },
-  created() {},
+  created() { },
   computed: {
-    ...mapState(["camera", "cameras", "lcAcsB128", "lcAcs", "address", "categorys"])
+    ...mapState(["projectscurrent","camera", "cameras", "lcAcsB128", "lcAcs", "address", "categorys"])
   },
   methods: {
     dlgConfirm() {
@@ -68,7 +105,8 @@ export default {
     dlgClose() {
       this.$emit("dlgCloseDlgCamera");
     },
-    getSelectedCameraStatus() {}
+    getSelectedCameraStatus() { },
+    projectChange() { }
   }
 };
 </script>

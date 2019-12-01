@@ -1,8 +1,9 @@
 <template>
   <div id="mysetProject">
     <div class="headerProject">
-      <button class="btnAddProject" @click="addProjectBtn">增加项目</button>
+      <button class="btnAddProject" v-if="usercurrent.userRole!==4" @click="addProjectBtn">增加项目</button>
       <dlgproject
+        v-bind:childusertree="parentusertree"
         v-if="isDlgProject"
         @dlgConfirmDlgProject="confirmDlgProject"
         @dlgCloseDlgProject="closeDlgProject"
@@ -30,39 +31,44 @@
           <td>操作项目</td>
         </tr>
         <tr v-for="item in projects.rows" :key="item.id">
-          <td v-if="item.projectName">{{item.projectName}}</td>
+          <td v-if="item.project.projectName">{{item.project.projectName}}</td>
           <td v-else>—</td>
-          <td v-if="item.projectIntroduce">{{item.projectIntroduce}}</td>
+          <td v-if="item.project.projectIntroduce">{{item.project.projectIntroduce}}</td>
           <td v-else>—</td>
-          <td v-if="item.projectUserId">{{item.projectUserId}}</td>
+          <td v-if="item.user.userName">{{item.user.userName}}</td>
           <td v-else>—</td>
           <!-- <td v-if="item.projectPermission">{{item.projectPermission}}</td>
           <td v-else>未填写项目地址</td>-->
-          <td v-if="item.projectAddress">{{item.projectAddress}}</td>
+          <td v-if="item.project.projectAddress">{{item.project.projectAddress}}</td>
           <td v-else>—</td>
           <!-- <td v-if="item.projectImg">{{item.projectImg}}</td>
           <td v-else>未填写项目图片</td>
           <td v-if="item.projectCad">{{item.projectCad}}</td>
-          <td v-else>未填写逃生图片</td> -->
-          <td v-if="item.projectStartTime">{{item.projectStartTime | dateFormat('yyyy-mm-DD')}}</td>
+          <td v-else>未填写逃生图片</td>-->
+          <td
+            v-if="item.project.projectStartTime"
+          >{{item.project.projectStartTime | dateFormat('yyyy-mm-DD')}}</td>
           <td v-else>—</td>
           <!--<td v-if="item.projectExpire">{{item.projectExpire}}</td>
           <td v-else>未填写运行期限</td>-->
-          <td v-if="item.projectNotify">{{item.projectNotify}}</td>
+          <td v-if="item.project.projectNotify">{{item.project.projectNotify}}</td>
           <td v-else>—</td>
           <td
-            :class="projectPermissionStatusList[item.projectPermissionStatus].class"
-            v-if="item.projectPermissionStatus"
-          >{{projectPermissionStatusList[item.projectPermissionStatus].name}}</td>
+            :class="projectPermissionStatusList[item.project.projectPermissionStatus].class"
+            v-if="item.project.projectPermissionStatus"
+          >{{projectPermissionStatusList[item.project.projectPermissionStatus].name}}</td>
           <td v-else>—</td>
           <td
-            :class="projectUseStatusList[item.projectUseStatus].class"
-            v-if="item.projectUseStatus"
-          >{{projectUseStatusList[item.projectUseStatus].name}}</td>
+            :class="projectUseStatusList[item.project.projectUseStatus].class"
+            v-if="item.project.projectUseStatus"
+          >{{projectUseStatusList[item.project.projectUseStatus].name}}</td>
           <td v-else>—</td>
           <td>
-            <a href="#" @click.prevent="updateProject(item.projectId)">修改</a>
-            <a href="#" @click.prevent="deleteProject(item.projectId)">删除</a>
+            <a
+              href="#"
+              @click.prevent="updateProject(item.project.projectId,item.project.projectCompanyId)"
+            >修改</a>
+            <a href="#" @click.prevent="deleteProject(item.project.projectId)">删除</a>
           </td>
         </tr>
       </table>
@@ -95,6 +101,7 @@ export default {
   },
   data() {
     return {
+      parentusertree: {},
       classError: "",
       classWarn: "",
       classInfo: "",
@@ -119,15 +126,19 @@ export default {
       maxPage: 9 // 最大页数
     };
   },
-  created: function() {
+  created: function () {
     //  created  表示页面加载完毕，立即执行
     this.pageHandler(1);
   },
   mounted() {
     this.$store.dispatch("selectProjectById", 1); // 初始化vuex中的project
+    // this.$store.dispatch("selectCompanyUsers"); // 查用户组
+    // this.$store.dispatch("selectUsersTree");
   },
   computed: {
     ...mapState([
+      "userstree",
+      "usercurrent",
       "project",
       "projects",
       "lcAcsB128",
@@ -138,7 +149,7 @@ export default {
   },
   watch: {},
   methods: {
-    selectProjectByIf() {},
+    selectProjectByIf() { },
     addProjectBtn() {
       var projectTemp = {
         projectId: "",
@@ -150,15 +161,27 @@ export default {
         projectExpireTime: ""
       };
       this.$store.dispatch("clearProjectVal", projectTemp);
+      // this.parentusertree = "";
       this.isDlgProject = true;
     },
-    async updateProject(projectId) {
+    async updateProject(projectId, projectCompanyId) {
       await this.$store.dispatch("selectProjectById", projectId); // 等待异步执行完成
+      // await this.$store.dispatch("selectUserProjectByProjectId", projectId); // 等待异步执行完成
+      this.userstree.forEach(item => {
+        if (item.company.companyId === projectCompanyId) {
+          this.parentusertree = item
+        }
+      });
       this.isDlgProject = true;
     },
     deleteProject(projectId) {
-      reqDeleteProjectById(projectId);
-      this.pageHandler(this.page);
+      var a = window.confirm("确认要删除吗？")
+      if (a) {
+        reqDeleteProjectById(projectId);
+        this.pageHandler(this.page);
+        alert("删除成功！")
+      } else {
+      }
     },
     confirmDlgProject(project) {
       if (project.projectId !== "") {
@@ -166,6 +189,7 @@ export default {
       } else {
         reqAddProject(project); // 增加一个项目
       }
+      this.$store.dispatch("selectDeviceTreeByCurrentUser");// 有增加或更新了，就得重新放一次招
       this.pageHandler(this.page);
       this.isDlgProject = false;
     },
@@ -173,7 +197,7 @@ export default {
       this.isDlgProject = false;
     },
     //  pagehandler方法 跳转到page页
-    pageHandler: function(page) {
+    pageHandler: function (page) {
       this.page = page;
       this.$store.dispatch("selectProjectByPage", {
         pageNum: page,

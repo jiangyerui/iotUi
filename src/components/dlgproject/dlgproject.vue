@@ -12,8 +12,26 @@
           <input type="text" placeholder="请不要超过20个字符" v-model="project.projectIntroduce" />
         </div>
         <div class="contextProjectItem">
+          <label>所属集团:</label>
+          <!-- <input type="text" placeholder="请选择项目管理员" v-model="project.projectUserId" /> -->
+          <select class v-model="childusertree" @change="changeCompany()">
+            <option
+              :value="item"
+              v-for="item in userstree"
+              :key="item.id"
+            >{{item.company.companyName}}</option>
+          </select>
+        </div>
+        <div class="contextProjectItem">
           <label>项目管理:</label>
-          <input type="text" placeholder="请选择项目管理员" v-model="project.projectUserId" />
+          <!-- <input type="text" placeholder="请选择项目管理员" v-model="project.projectUserId" /> -->
+          <select class v-model="project.projectUserId" @change="changeProject()">
+            <option
+              :value="item.userProject.userId"
+              v-for="item in childusertree.userProjects"
+              :key="item.id"
+            >{{item.userProject.userName}}</option>
+          </select>
         </div>
         <div class="contextProjectItem">
           <label>项目地址:</label>
@@ -23,6 +41,10 @@
         <div class="contextProjectItem">
           <label>详细地址:</label>
           <input type="text" placeholder="请输入详细地址" v-model="project.projectAddress" />
+        </div>
+        <div class="contextProjectItem" v-if="usercurrent.userRole===1">
+          <label>3D-url:</label>
+          <input type="text" placeholder="请输入3D图像url" v-model="project.project3durl" />
         </div>
         <!-- <div class="contextProjectItem">
           <label>项目图片:</label>
@@ -34,11 +56,13 @@
         </div>-->
         <div class="contextProjectItem">
           <label>开启时间:</label>
-          <input type="text" id="startTime" />
+          <input type="text" id="startTime" placeholder="点击选择日期" />
+          <img src="./date.png" class="date-input-icon1" alt />
         </div>
         <div class="contextProjectItem">
           <label>运行期限:</label>
           <input type="text" id="expireTime" />
+          <img src="./date.png" class="date-input-icon2" alt />
         </div>
         <div class="contextProjectItem">
           <label>到期提醒:</label>
@@ -46,8 +70,27 @@
         </div>
         <div class="contextProjectItem">
           <label>使用状态:</label>
-          <select class="contextProjectItem" v-model="project.projectUseStatus" @change="getSelectedProjectUseStatus">
-            <option :value="item.id" v-for="item in selectProjectUseStatusList" :key="item.id">{{item.name}}</option>
+          <select class v-model="project.projectUseStatus" @change="getSelectedProjectUseStatus">
+            <option
+              :value="item.id"
+              v-for="item in selectProjectUseStatusList"
+              :key="item.id"
+            >{{item.name}}</option>
+          </select>
+          <!-- <input type="password" placeholder="请不要超过20个字符" v-model="project.projectUseStatus" /> -->
+        </div>
+        <div class="contextProjectItem" v-if="usercurrent.userRole===1||usercurrent.userRole===2">
+          <label>权限状态:</label>
+          <select
+            class
+            v-model="project.projectPermissionStatus"
+            @change="getSelectedProjectUseStatus"
+          >
+            <option
+              :value="item.id"
+              v-for="item in selectProjectPermissionStatusList"
+              :key="item.id"
+            >{{item.name}}</option>
           </select>
           <!-- <input type="password" placeholder="请不要超过20个字符" v-model="project.projectUseStatus" /> -->
         </div>
@@ -69,12 +112,21 @@ export default {
   components: {
     Cascader
   },
+  props: ["childusertree"],
   data() {
     return {
+      startTime: "",
+      userProjects: {},
+      selectProjectPermissionStatusList: [
+        { id: 1, name: "上锁" },
+        { id: 2, name: "正常" },
+        { id: 3, name: "提醒" },
+        { id: 4, name: "到期" }
+      ],
       selectProjectUseStatusList: [
-        { id: 0, name: "试用" },
-        { id: 1, name: "运行" },
-        { id: 2, name: "停用" }
+        { id: 1, name: "试用" },
+        { id: 2, name: "运行" },
+        { id: 3, name: "停用" }
       ],
       // 获取全局的laydate，带入到组件中
       laydate: window.laydate,
@@ -158,12 +210,22 @@ export default {
     };
   },
   mounted() {
+    this.userProjects = this.userprojects;
     this.laydate.render({
       elem: "#startTime",
       type: "datetime",
       format: "yyyy-MM-dd",
+      eventElem: ".date-input-icon1",
+      trigger: "click",
+      // showBottom: false,
+      change: function(value) {
+        // console.log('dididididididi')
+        // this.startTime = value
+      },
       value: formatDate(
-        this.project.projectId===''?new Date():new Date(this.project.projectStartTime),
+        this.project.projectId === ""
+          ? new Date()
+          : new Date(this.project.projectStartTime),
         "yyyy-MM-dd hh:mm:ss"
       ),
       done: value => {
@@ -174,8 +236,12 @@ export default {
       elem: "#expireTime",
       type: "datetime",
       format: "yyyy-MM-dd",
+      eventElem: ".date-input-icon2",
+      trigger: "click",
       value: formatDate(
-        this.project.projectId===''?new Date():new Date(this.project.projectExprieTime),
+        this.project.projectId === ""
+          ? new Date()
+          : new Date(this.project.projectExpireTime),
         "yyyy-MM-dd hh:mm:ss"
       ),
       done: value => {
@@ -198,6 +264,10 @@ export default {
   created() {},
   computed: {
     ...mapState([
+      "userstree",
+      "usercurrent",
+      "userprojects",
+      "usercompanys",
       "project",
       "projects",
       "lcAcsB128",
@@ -221,7 +291,19 @@ export default {
     dlgClose() {
       this.$emit("dlgCloseDlgProject");
     },
-    getSelectedProjectUseStatus() {}
+    getSelectedProjectUseStatus() {
+      this.userProjects = this.userprojects;
+    },
+    async changeCompany() {
+      // this.userProjects = this.userprojects
+      // console.log("hahahahah")
+      // await this.$store.dispatch("clearUseProjectVal", this.userProjects); // 等待异步执行完成
+    },
+    changeProject() {
+      // console.log("hahahahah");
+      // this.userprojects = this.userProjects
+      // this.userProjects = this.userprojects;
+    }
   },
   filters: {}
 };
@@ -277,6 +359,8 @@ export default {
           width 130px
           height 27px
           border-radius 4px
+        img
+          width 20px
     .btnDiv
       position absolute
       // margin-right 50px

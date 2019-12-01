@@ -18,11 +18,11 @@
           <td>报警状态</td>
           <td>处理意见</td>
           <td>处理时间</td>
-          <td>解决用户</td>
+          <td>安全经理编号</td>
           <td>管理报警</td>
         </tr>
         <tr v-for="item in alarmLogs.rows" :key="item.alarmId">
-          <td v-if="item.alarmTime">{{item.alarmTime}}</td>
+          <td v-if="item.alarmTime">{{item.alarmTime | dateFormat('yyyy-mm-DD hh:mm:ss')}}</td>
           <td v-else>未填写报警时间</td>
           <td v-if="item.alarmDeviceId">{{item.alarmDeviceId}}</td>
           <td v-else>未填写报警设备</td>
@@ -34,13 +34,17 @@
           >{{alarmLogStatusList[item.alarmStatus].name}}</td>
           <td v-else>未填写报警状态</td>
           <td v-if="item.alarmSolveResult">{{item.alarmSolveResult}}</td>
-          <td v-else>未填写报警意见</td>
-          <td v-if="item.alarmSolveTime">{{ item.alarmSolveTime | dateFormat("yyyy-MM-dd hh:mm:ss")}}</td>
-          <td v-else>未填写处理时间</td>
+          <td v-else>未处理</td>
+          <td
+            v-if="item.alarmSolveTime"
+          >{{ item.alarmSolveTime | dateFormat("yyyy-MM-dd hh:mm:ss")}}</td>
+          <!-- <td v-if="item.alarmSolveTime">{{ item.alarmSolveTime | dateFormat('yyyy-mm-DD')}}</td> -->
+          <td v-else>未处理</td>
           <td v-if="item.alarmUserId">{{item.alarmUserId}}</td>
-          <td v-else>未填写解决用户</td>
+          <td v-else>未处理</td>
           <td>
-            <a href="#" @click.prevent="deleteAlarmLog(item.alarmLogId)">删除</a>
+            <a href="#" @click.prevent="urgeAlarmLog(item.alarmId)">督促</a>
+            <a href="#" @click.prevent="deleteAlarmLog(item.alarmId)">删除</a>
           </td>
         </tr>
       </table>
@@ -57,7 +61,7 @@
   </div>
 </template>
 <script type='text/ecmascript-6'>
-import { formatDate } from "@/common/commonUtil.js";
+// import { formatDate } from "@/common/commonUtil.js";
 // import dlgalarmLog from "../dlgalarmLog/dlgalarmLog.vue";
 // import dlgconfirm from "../dlgConfirm/dlgConfirm.vue";
 import zpagenav from "../../components/zpageNav/zpageNav.vue";
@@ -94,7 +98,7 @@ export default {
       maxPage: 9 // 最大页数
     };
   },
-  created: function() {
+  created: function () {
     //  created  表示页面加载完毕，立即执行
     this.pageHandler(1);
   },
@@ -112,10 +116,35 @@ export default {
     ])
   },
   filters: {
-    formatDate
+    dateFormat: function (dateStr, pattern) {
+      var dt = new Date(dateStr)
+      var y = dt.getFullYear()
+      var m = dt.getMonth() + 1
+      var d = dt.getDate()
+      // return y + '-' + m + '-' + d
+      if (pattern.toLowerCase() === 'yyyy-mm-dd') {
+        // return '$(y)-$(m)-$(d)'
+        return y + '-' + m + '-' + d
+      } else {
+        var hh = dt.getHours()
+        var mm = dt.getMinutes()
+        var ss = dt.getSeconds()
+        if (hh < 10) {
+          hh = '0' + hh
+        }
+        if (mm < 10) {
+          mm = '0' + mm
+        }
+        if (ss < 10) {
+          ss = '0' + ss
+        }
+        // return '$(y)-$(m)-$(d) $(hh):$(mm):$(ss)'
+        return y + '-' + m + '-' + d + ' ' + hh + ':' + mm + ':' + ss
+      }
+    }
   },
   methods: {
-    selectAlarmLogByIf() {},
+    selectAlarmLogByIf() { },
     addAlarmLogBtn() {
       var alarmLogTemp = {
         alarmLogId: "",
@@ -134,9 +163,25 @@ export default {
       await this.$store.dispatch("selectAlarmLogById", alarmLogId); // 等待异步执行完成
       this.isDlgAlarmLog = true;
     },
+    // 督促处理
+    urgeAlarmLog(alarmLogId) {
+      // alert("将再次给安全经理发送一条督促处理报警的短信！")
+      var a = window.confirm("确认要再次给安全经理发送一条督促处理报警的短信吗？")
+      if (a) {
+        alert("发送成功！")
+      } else {
+
+      }
+    },
+    // 删除报警
     deleteAlarmLog(alarmLogId) {
-      reqDeleteAlarmLogById(alarmLogId);
-      this.pageHandler(this.page);
+      var a = window.confirm("确认要删除吗？")
+      if (a) {
+        reqDeleteAlarmLogById(alarmLogId);
+        this.pageHandler(this.page);
+      } else {
+
+      }
     },
     confirmDlgAlarmLog(alarmLog) {
       if (alarmLog.alarmLogId !== "") {
@@ -151,7 +196,7 @@ export default {
       this.isDlgAlarmLog = false;
     },
     //  pagehandler方法 跳转到page页
-    pageHandler: function(page) {
+    pageHandler: function (page) {
       // here you can do custom state update
       this.page = page;
       // this.$store.dispatch("selectAlarmLogByPage", page, this.alarmLogName);

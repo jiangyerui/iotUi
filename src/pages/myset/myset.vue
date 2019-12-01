@@ -60,7 +60,9 @@ export default {
     mysetalarmlog,
     mysetproject
   },
-  mounted() {}
+  mounted() {
+    this.$store.dispatch("selectUsersTree")
+  }
 };
 </script>
 <style lang='stylus' rel='stylesheet/stylus'>

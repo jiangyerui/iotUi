@@ -5,20 +5,28 @@
       <div class="contextCompany">
         <div class="contextCompanyItem">
           <label>集团名称:</label>
-          <input type="text" placeholder="请输入11位手机号" v-model="company.companyName" />
+          <input type="text" placeholder="请不要超过20个字符" v-model="company.companyName" />
         </div>
         <div class="contextCompanyItem">
           <label>集团简介:</label>
-          <input type="password" placeholder="请不要超过20个字符" v-model="company.companyIntroduce" />
+          <textarea rows="5" cols="20" placeholder="请不要超过255个字符" v-model="company.companyIntroduce"></textarea>
         </div>
         <div class="contextCompanyItem">
           <label>集团管理:</label>
-          <input type="password" placeholder="请不要超过20个字符" v-model="companyUserId" />
+          <!-- <input type="hidden" v-model="company.companyUserId" v-if="usercurrent.userRole===2">{{usercurrent.userName}} -->
+          <!-- <input type="text" v-model="user.userStatus" /> -->
+          <select class v-model="company.companyUserId">
+            <option
+              :value="item.company.companyUserId"
+              v-for="item in userstree"
+              :key="item.id"
+            >{{item.company.companyName}}</option>
+          </select>
         </div>
-        <div class="contextCompanyItem">
-          <label>访问权限:</label>
-          <!-- <input type="text" placeholder="请不超过20个字符" v-model="company.companyPermission" /> -->
-        </div>
+        <!-- <div class="contextCompanyItem"> -->
+        <!-- <label>访问权限:</label> -->
+        <!-- <input type="text" placeholder="请不超过20个字符" v-model="company.companyPermission" /> -->
+        <!-- </div> -->
       </div>
       <div class="btnDiv">
         <button class="btnCom btnConfirm" @click="dlgConfirm">确认</button>
@@ -41,7 +49,10 @@ export default {
         companyImg: "",
         companyUserId: ""
       },
-      selectCompanyStatusList: [{ id: 0, name: "锁定" }, { id: 1, name: "正常" }],
+      selectCompanyStatusList: [
+        { id: 0, name: "锁定" },
+        { id: 1, name: "正常" }
+      ],
       selectCompanyRoleList: [
         { id: 1, name: "集团用户" },
         { id: 2, name: "项目用户" },
@@ -53,9 +64,21 @@ export default {
   mounted() {
     this.companyPasswordConfirm = this.company.companyPassword;
   },
-  created() {},
+  created() {
+    // this.$store.dispatch("selectCompanyUsers");
+  },
   computed: {
-    ...mapState(["company", "companys", "lcAcsB128", "lcAcs", "address", "categorys"])
+    ...mapState([
+      "userstree",
+      "usercurrent",
+      "usercompanys",
+      "company",
+      "companys",
+      "lcAcsB128",
+      "lcAcs",
+      "address",
+      "categorys"
+    ])
   },
   methods: {
     dlgConfirm() {
@@ -113,6 +136,14 @@ export default {
           // left 50px
           width 220px
           height 25px
+          margin-left 100px
+          border-radius 4px
+          padding-left 10px
+        textarea
+          // position absolute
+          // left 50px
+          width 220px
+          // height 25px
           margin-left 100px
           border-radius 4px
           padding-left 10px

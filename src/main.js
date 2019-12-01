@@ -12,7 +12,7 @@ import echarts from 'echarts'
 import 'view-design/dist/styles/iview.css';
 // 引入axios
 import axios from 'axios'
-import {postRequest} from './api/ajaxPost'
+import { postRequest } from './api/ajaxPost'
 
 // 引入qs
 // import qs from 'qs'
@@ -44,6 +44,15 @@ new Vue({
   template: '<App/>'
 })
 
+// 注册一个全局自定义指令 `v-focus`
+Vue.directive('focus', {
+  // 当被绑定的元素插入到 DOM 中时……
+  inserted: function (el) {
+    // 聚焦元素
+    el.focus()
+  }
+})
+
 // 格式化时间
 Vue.filter('dateFormat', function (dateStr, pattern) {
   var dt = new Date(dateStr)
@@ -58,15 +67,15 @@ Vue.filter('dateFormat', function (dateStr, pattern) {
     var hh = dt.getHours()
     var mm = dt.getMinutes()
     var ss = dt.getSeconds()
-    if (hh < 10) {
-      hh = '0' + hh
-    }
-    if (mm < 10) {
-      mm = '0' + mm
-    }
-    if (ss < 10) {
-      ss = '0' + ss
-    }
+    // if (hh < 10) {
+    //   hh = '0' + hh
+    // }
+    // if (mm < 10) {
+    //   mm = '0' + mm
+    // }
+    // if (ss < 10) {
+    //   ss = '0' + ss
+    // }
     // return '$(y)-$(m)-$(d) $(hh):$(mm):$(ss)'
     return y + '-' + m + '-' + d + ' ' + hh + ':' + mm + ':' + ss
   }

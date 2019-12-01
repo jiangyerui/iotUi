@@ -18,9 +18,14 @@
         <!-- <form action="http://localhost:8080/login" method="post"> -->
         <!-- <form action="login" method="post"> -->
         <label>用户名：</label>
-        <input type="text" name="username" v-model="loginForm.username" />
+        <input type="text" name="username" v-focus v-model="loginForm.username" />
         <label>密码：</label>
-        <input type="password" name="password" v-model="loginForm.password" />
+        <input
+          type="password"
+          name="password"
+          v-model="loginForm.password"
+          @keyup.enter="submitClick"
+        />
         <button type @click="submitClick">登陆</button>
         <!-- </form> -->
       </div>
@@ -31,7 +36,17 @@
 export default {
   name: "App",
   created() {},
-  mounted() {},
+  mounted() {
+    this.$store.dispatch("selectCurrentUser");
+  },
+  directives: {
+    focus: {
+      // 指令的定义
+      inserted: function(el) {
+        el.focus();
+      }
+    }
+  },
   data() {
     return {
       arg: "",

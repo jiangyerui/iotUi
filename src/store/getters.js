@@ -30,12 +30,18 @@ export default {
   devices (state) {
     return state.devices
   },
+  devicecompanys (state) {
+    return state.devicecompanys
+  },
   // project
   project (state) {
     return state.project
   },
   projects (state) {
     return state.projects
+  },
+  projectscurrent (state) {
+    return state.projectscurrent
   },
   // company
   company (state) {
@@ -47,6 +53,21 @@ export default {
   // user
   user (state) {
     return state.user
+  },
+  userCurrent (state) {
+    return state.userCurrent
+  },
+  userCompany (state) {
+    return state.userCompany
+  },
+  userstree (state) {
+    return state.userstree
+  },
+  usertree (state) {
+    return state.usertree
+  },
+  userProject (state) {
+    return state.userprojects
   },
   users (state) {
     return state.users

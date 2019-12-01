@@ -10,11 +10,18 @@ import {
     RECEIVE_CAMERAS,
     RECEIVE_DEVICE,
     RECEIVE_DEVICES,
+    RECEIVE_DEVICECOMPANYS,
+    RECEIVE_MYDEVICEPROJECTS,
     RECEIVE_PROJECT,
     RECEIVE_PROJECTS,
+    RECEIVE_PROJECTSCURRENT,
     RECEIVE_COMPANY,
     RECEIVE_COMPANYS,
     RECEIVE_USER,
+    RECEIVE_USERCURRENT,
+    RECEIVE_USERSTREE,
+    RECEIVE_USERTREE,
+    RECEIVE_USERPROJECTS,
     RECEIVE_USERS,
     RECEIVE_LCACSB128,
     RECEIVE_LCACS
@@ -49,12 +56,21 @@ export default {
     [RECEIVE_DEVICES] (state, { devices }) {
         state.devices = devices
     },
+    [RECEIVE_DEVICECOMPANYS] (state, { devicecompanys }) {
+        state.devicecompanys = devicecompanys
+    },
+    [RECEIVE_MYDEVICEPROJECTS] (state, { mydeviceprojects }) {
+        state.mydeviceprojects = mydeviceprojects
+    },
     // project
     [RECEIVE_PROJECT] (state, { project }) {
         state.project = project
     },
     [RECEIVE_PROJECTS] (state, { projects }) {
         state.projects = projects
+    },
+    [RECEIVE_PROJECTSCURRENT] (state, { projectscurrent }) {
+        state.projectscurrent = projectscurrent
     },
     // company
     [RECEIVE_COMPANY] (state, { company }) {
@@ -66,6 +82,18 @@ export default {
     // user
     [RECEIVE_USER] (state, { user }) {
         state.user = user
+    },
+    [RECEIVE_USERCURRENT] (state, { usercurrent }) {
+        state.usercurrent = usercurrent
+    },
+    [RECEIVE_USERSTREE] (state, { userstree }) {
+        state.userstree = userstree
+    },
+    [RECEIVE_USERTREE] (state, { usertree }) {
+        state.usertree = usertree
+    },
+    [RECEIVE_USERPROJECTS] (state, { userprojects }) {
+        state.userprojects = userprojects
     },
     [RECEIVE_USERS] (state, { users }) {
         state.users = users
