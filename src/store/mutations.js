@@ -12,6 +12,8 @@ import {
     RECEIVE_DEVICES,
     RECEIVE_DEVICECOMPANYS,
     RECEIVE_MYDEVICEPROJECTS,
+    RECEIVE_DEVICEDATA,
+    RECEIVE_INDEXDEVPROS,
     RECEIVE_PROJECT,
     RECEIVE_PROJECTS,
     RECEIVE_PROJECTSCURRENT,
@@ -23,7 +25,7 @@ import {
     RECEIVE_USERTREE,
     RECEIVE_USERPROJECTS,
     RECEIVE_USERS,
-    RECEIVE_LCACSB128,
+    // RECEIVE_LCACSB128,
     RECEIVE_LCACS
 } from './mutation-types'
 export default {
@@ -62,6 +64,12 @@ export default {
     [RECEIVE_MYDEVICEPROJECTS] (state, { mydeviceprojects }) {
         state.mydeviceprojects = mydeviceprojects
     },
+    [RECEIVE_DEVICEDATA] (state, { devicedata }) {
+        state.devicedata = devicedata
+    },
+    [RECEIVE_INDEXDEVPROS] (state, { indexdevpros }) {
+        state.indexdevpros = indexdevpros
+    },
     // project
     [RECEIVE_PROJECT] (state, { project }) {
         state.project = project
@@ -99,9 +107,9 @@ export default {
         state.users = users
     },
     // other
-    [RECEIVE_LCACSB128] (state, { lcAcsB128 }) {
-        state.lcAcsB128 = lcAcsB128
-    },
+    // [RECEIVE_LCACSB128] (state, { lcAcsB128 }) {
+    //     state.lcAcsB128 = lcAcsB128
+    // },
     [RECEIVE_LCACS] (state, { lcAcs }) {
         state.lcAcs = lcAcs
     }

@@ -7,6 +7,7 @@ import {
     reqSelectAlarmLogById,
     reqSelectAllAlarmLog,
     reqSelectAlarmLogByPage,
+    reqSelectAlarmLogByCurrentUser,
     // camera
     reqSelectCameraById,
     reqSelectAllCamera,
@@ -16,6 +17,8 @@ import {
     reqSelectAllDevice,
     reqSelectDeviceByPage,
     reqSelectDeviceTreeByCurrentUser,
+    reqSelectDeviceDataByMac,
+    reqSelectDeviceProjectsByCurrentUser,
     // project
     reqSelectProjectById,
     reqSelectAllProject,
@@ -34,7 +37,7 @@ import {
     reqSelectAllUser,
     reqSelectUserByPage,
     // other
-    reqlcAcsB128,
+    // reqlcAcsB128,
     reqlcAcs
 } from '../api'
 import {
@@ -52,6 +55,8 @@ import {
     RECEIVE_DEVICES,
     RECEIVE_DEVICECOMPANYS,
     RECEIVE_MYDEVICEPROJECTS,
+    RECEIVE_DEVICEDATA,
+    RECEIVE_INDEXDEVPROS,
     // project
     RECEIVE_PROJECT,
     RECEIVE_PROJECTS,
@@ -67,7 +72,7 @@ import {
     RECEIVE_USERPROJECTS,
     RECEIVE_USERS,
     // other
-    RECEIVE_LCACSB128,
+    // RECEIVE_LCACSB128,
     RECEIVE_LCACS
 } from './mutation-types'
 export default {
@@ -104,10 +109,18 @@ export default {
         const result = await reqSelectAllAlarmLog()
         commit(RECEIVE_ALARMLOGS, { alarmLogs: result })
     },
-    async selectAlarmLogByPage({ commit, state }, { pageNum, alarmlogPhone, alarmlogName }) {
+    async selectAlarmLogByCurrentUser({ commit }) {
+        const result = await reqSelectAlarmLogByCurrentUser()
+        commit(RECEIVE_ALARMLOGS, { alarmLogs: result })
+    },
+    async updateCurrentAlarmLogs({ commit },alarmlogcurrent) {
+        const result = alarmlogcurrent
+        commit(RECEIVE_ALARMLOGS, { alarmLogs: result })
+    },
+    async selectAlarmLogByPage({ commit, state }, { pageNum, alarmlogName }) {
         const pageSize = state.pageSize
-        const result = await reqSelectAlarmLogByPage({ pageNum, pageSize, alarmlogPhone, alarmlogName })
-        // console.log(result)
+        // console.log('alarmlogName='+alarmlogName)
+        const result = await reqSelectAlarmLogByPage({pageNum, pageSize, alarmlogName})
         commit(RECEIVE_ALARMLOGS, { alarmLogs: result })
     },
     // camera
@@ -153,6 +166,22 @@ export default {
     async clearMyDeviceProjectVal({ commit }, mydeviceprojects) {
         const result = mydeviceprojects
         commit(RECEIVE_MYDEVICEPROJECTS, { mydeviceprojects: result })
+    },
+    async selectDeviceDataByMac({ commit }, mac) {
+        const result = await reqSelectDeviceDataByMac(mac)
+        commit(RECEIVE_DEVICEDATA, { devicedata: result })
+    },
+    async updatedevicedatafrommqtt({ commit }, obj) {
+        const result = obj
+        commit(RECEIVE_DEVICEDATA, { devicedata: result })
+    },
+    async selectDeviceProjectsByCurrentUser({ commit }) {
+        const result = await reqSelectDeviceProjectsByCurrentUser()
+        commit(RECEIVE_INDEXDEVPROS, { indexdevpros: result })
+    },
+    async updateDeviceProjects({ commit },is) {
+        const result = is
+        commit(RECEIVE_INDEXDEVPROS, { indexdevpros: result })
     },
     // project
     async clearProjectVal({ commit }, project) {
@@ -232,10 +261,10 @@ export default {
         const result = await reqSelectUserByPage({ pageNum, pageSize, userPhone, userName })
         commit(RECEIVE_USERS, { users: result })
     },
-    async getLcAcsB128({ commit }, mac) {
-        const result = await reqlcAcsB128(mac)
-        commit(RECEIVE_LCACSB128, { lcAcsB128: result })
-    },
+    // async getLcAcsB128({ commit }, mac) {
+    //     const result = await reqlcAcsB128(mac)
+    //     commit(RECEIVE_LCACSB128, { lcAcsB128: result })
+    // },
     // other
     async getLcAcs({ commit }, id) {
         const result = await reqlcAcs(id)

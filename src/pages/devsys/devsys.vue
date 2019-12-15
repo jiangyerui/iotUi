@@ -135,6 +135,7 @@ export default {
   name: "devsys",
   mounted() {
     // console.log('devsys:'+this.$route.path)
+    this.$store.dispatch("selectCurrentUser");
   },
   methods: {
     tip() {

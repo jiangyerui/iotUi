@@ -13,6 +13,16 @@
       <li>10A</li>
     </ul>
     <ul class="yuntuMa">
+      <li :class="[classAlarm1]">回路1: {{devicedata.l1Value}}mA</li>
+      <li :class="[classAlarm2]">回路2: {{devicedata.l2Value}}mA</li>
+      <li :class="[classAlarm3]">回路3: {{devicedata.l3Value}}mA</li>
+      <li :class="[classAlarm4]">回路4: {{devicedata.l4Value}}mA</li>
+      <li :class="[classAlarm5]">回路5: {{devicedata.l5Value}}°C</li>
+      <li :class="[classAlarm5]">回路6: {{devicedata.l6Value}}°C</li>
+      <li :class="[classAlarm5]">回路7: {{devicedata.l7Value}}°C</li>
+      <li :class="[classAlarm5]">回路8: {{devicedata.l8Value}}°C</li>
+    </ul>
+    <!-- <ul class="yuntuMa">
       <li :class="[classAlarm1]">回路1: {{lcAcs.l1Value}}mA</li>
       <li :class="[classAlarm2]">回路2: {{lcAcs.l2Value}}mA</li>
       <li :class="[classAlarm3]">回路3: {{lcAcs.l3Value}}mA</li>
@@ -21,7 +31,7 @@
       <li>回路6: 30°C</li>
       <li>回路7: 30°C</li>
       <li style="color: gray">回路8: 掉线</li>
-    </ul>
+    </ul> -->
     <p class="yuntuYanGan">正常</p>
   </div>
 </template>
@@ -39,7 +49,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(["lcAcsB128", "lcAcs", "address", "categorys"])
+    ...mapState(["devicedata", "lcAcsB128", "lcAcs", "address", "categorys"])
   },
   watch: {
     'lcAcs.l1Value': function (newVal, oldVal) {
@@ -125,11 +135,11 @@ export default {
       color green
   .yuntuMa
     position absolute
-    top 410px
+    top 405px
     left 760px
     li
       padding-left 20px
-      padding-bottom 5px
+      padding-bottom 0.5px
       display block
       text-align left
       color green

@@ -9,7 +9,7 @@
         <td>在线</td><td><div class="d2"></div></td><td>5213</td><td><div class="d2"></div></td><td>98%</td>
       </tr>
       <tr class="tr">
-        <td>报警</td><td><div class="d3"></div></td><td>23</td><td><div class="d3"></div></td><td>5%</td>
+        <td>报警</td><td><div class="d3"></div></td><td>{{alarmLogs.length}}</td><td><div class="d3"></div></td><td>5%</td>
       </tr>
       <tr class="tr">
         <td>故障</td><td><div class="d4"></div></td><td>5</td><td><div class="d4"></div></td><td>0.5%</td>
@@ -21,8 +21,16 @@
   </div>
 </template>
 <script>
+import { mapState } from "vuex";
 export default {
-  name: 'devcount'
+  name: 'devcount',
+  computed: {
+    ...mapState([
+      "indexdevpros",
+      "alarmLogs",
+      "devicedata"
+    ])
+  }
 }
 </script>
 

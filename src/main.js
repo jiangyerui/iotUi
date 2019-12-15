@@ -7,6 +7,7 @@ import router from './router'
 import animated from 'animate.css' // npm install animate.css --save安装，再引入
 import Pagination from 'vue-pagination-2'
 import echarts from 'echarts'
+// import websocket from 'websocket'
 // import laydate from 'laydate'
 // import ViewUI from 'view-design';
 import 'view-design/dist/styles/iview.css';
@@ -33,6 +34,7 @@ Vue.prototype.$echarts = echarts
 
 // 使用animate
 Vue.use(animated)
+// Vue.use(websocket)
 
 Vue.config.productionTip = false
 /* eslint-disable no-new */

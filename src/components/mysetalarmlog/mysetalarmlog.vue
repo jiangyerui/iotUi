@@ -5,7 +5,7 @@
       <!-- <dlgalarmLog v-if="isDlgAlarmLog" @dlgConfirmDlgAlarmLog="confirmDlgAlarmLog" @dlgCloseDlgAlarmLog="closeDlgAlarmLog"></dlgalarmLog> -->
       <div class="searchAlarmLog">
         <!-- <input type="text" placeholder="输入设备手机号" v-model="alarmLogPhone" /> -->
-        <input type="text" placeholder="输入设备名称" v-model="alarmLogName" />
+        <input type="text" placeholder="输入设备名称" v-model="alarmlogName" />
         <button @click="pageHandler(1)">查询</button>
       </div>
     </div>
@@ -90,7 +90,7 @@ export default {
         { class: "classInfo", name: "处理完成" },
         { class: "classInfo", name: "处理完成" }
       ],
-      alarmLogName: "",
+      alarmlogName: "",
       isDlgAlarmLog: false,
       page: 1, //  显示的是哪一页
       pageSize: 5, //  每一页显示的数据条数
@@ -202,7 +202,7 @@ export default {
       // this.$store.dispatch("selectAlarmLogByPage", page, this.alarmLogName);
       this.$store.dispatch("selectAlarmLogByPage", {
         pageNum: page,
-        alarmLogName: this.alarmLogName
+        alarmlogName: this.alarmlogName
       });
     }
   }

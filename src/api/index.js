@@ -83,6 +83,10 @@ export const reqSelectDeviceByPage = ({pageNum,pageSize,deviceName}) => ajaxGet(
 })
 // 根据当前登陆用户查设备树
 export const reqSelectDeviceTreeByCurrentUser = () => ajaxGet('/platform/device/selectDeviceTreeByCurrentUser/')
+// 根据设备MAC查询设备数据
+export const reqSelectDeviceDataByMac = (mac) => ajaxGet('/platform/app/device/selectDeviceDataByMac/'+mac)
+// 根据当前登陆用户查首页信息树
+export const reqSelectDeviceProjectsByCurrentUser = () => ajaxGet('/platform/app/device/selectDeviceProjectsByCurrentUser/')
 
 // 增加一个相机
 export const reqAddCamera = (camera) => ajaxPost('/platform/camera/addCamera/',camera)
@@ -111,6 +115,8 @@ export const reqUpdateAlarmLog = (alarmlog) => ajaxPut('/platform/alarmLog/updat
 export const reqSelectAlarmLogById = (alarmlogId) => ajaxGet('/platform/alarmLog/selectAlarmLogById/'+alarmlogId)
 // 查询所有报警记录
 export const reqSelectAllAlarmLog = () => ajaxGet('/platform/alarmLog/selectAllAlarmLog/')
+// 根据当前登陆用户查报警
+export const reqSelectAlarmLogByCurrentUser = () => ajaxGet('/platform/app/alarmlog/selectAlarmLogByCurrentUser/')
 // 分页查询报警记录
 export const reqSelectAlarmLogByPage = ({pageNum,pageSize,alarmlogName}) => ajaxGet('/platform/alarmLog/selectAlarmLogByPage',{
     pageNum,
@@ -135,5 +141,5 @@ export const reqSelectOperationLogByPage = ({pageNum,pageSize}) => ajaxGet('/pla
 })
 
 // 获取lcAcsB128
-export const reqlcAcsB128 = (mac) => ajax('/api/lcAcsB128/'+mac)
+// export const reqlcAcsB128 = (mac) => ajax('/api/lcAcsB128/'+mac)
 export const reqlcAcs = (id) => ajax('/api/lcAcs/'+id)

@@ -4,7 +4,9 @@
       <h1 @click.stop="funHomeTl()">北京联创广汇安全用电物联网云</h1>
       <span :style="{color: homeSpanColor}" @click.stop="funHomeSpan()">{{homeSpanText}}</span>
     </div>
-    <mymap class="mymap" v-show="isMyMap"></mymap>
+    <mymap class="mymap" v-show="isMyMap" ref="myrefmap"></mymap>
+    <!-- <mqttws class="mqttws"></mqttws> -->
+    <!-- <viewtest class="viewtest"></viewtest> -->
     <devstatus
       class="devStatus"
       :class="[classDevStatus]"
@@ -42,6 +44,7 @@
       :class="[classDevItem]"
       :style="{left: devItemLeft+'px'}"
       v-on:func="funIsDevItem"
+      v-on:emithome="updatemapofhome"
       v-show="isDevItem"
     >设备列表</devitem>
     <devdata
@@ -93,6 +96,8 @@
 
 <script type='text/ecmascript-6'>
 import mymap from "../../components/mymap/mymap.vue";
+// import viewtest from "../../components/viewtest/viewtest.vue";
+import mqttws from "../../components/mqttws/mqttws.vue";
 import devstatus from "../../components/devstatus/devstatus.vue";
 import devcount from "../../components/devcount/devcount.vue";
 import monthcount from "../../components/monthcount/monthcount.vue";
@@ -113,15 +118,20 @@ export default {
     // console.log('home:'+this.$route.path)
     // var hao = new SpeechSynthesisUtterance('Hi, I\'m jigsaw!')
     // speechSynthesis.speak(hao)
-    var hao = new SpeechSynthesisUtterance(this.$refs.myNowAlarm.alarmToString);
-    speechSynthesis.speak(hao);
+
+    // var hao = new SpeechSynthesisUtterance(this.$refs.myNowAlarm.alarmToString);
+    // speechSynthesis.speak(hao);
     // console.log(this.$refs.myNowAlarm.alarmToString)
+    this.$store.dispatch("selectDeviceProjectsByCurrentUser");
+    this.$store.dispatch("selectAlarmLogByCurrentUser");
   },
   computed: {
-    ...mapState(["lcAcsB128", "address", "categorys"])
+    ...mapState(["usercurrent", "address", "indexdevpros", "categorys"])
   },
   components: {
     mymap,
+    mqttws,
+    // viewtest,
     devstatus,
     devcount,
     monthcount,
@@ -178,6 +188,10 @@ export default {
     };
   },
   methods: {
+    updatemapofhome() {
+      console.log("updatemapofhome")
+      this.$refs.myrefmap.updatemapofmymap()
+    },
     funHomeTl() {
       this.$router.go(0);
       location.reload();
@@ -351,7 +365,7 @@ export default {
       this.devDataFlag = true;
       this.isProjectMp4 = false;
     },
-    funIsProjectImg() {},
+    funIsProjectImg() { },
     funIsProjectCad() {
       // this.classDevStatus = 'box animated bounceOutLeft'
       // this.classDevCount = 'box animated bounceOutLeft'
@@ -400,154 +414,134 @@ export default {
       this.isProjectCad2 = true;
       this.isProjectMp4 = true;
     },
-    funIsProjectMp4() {}
+    funIsProjectMp4() { }
   }
 };
 </script>
 
 <style lang='stylus' rel='stylesheet/stylus'>
-#home {
-  .homeTl {
-    height: 45px;
-    background-color: #131313;
-    border: 3px solid #131313;
-    border-radius: 10px;
-    text-align: center;
-
-    h1 {
-      display: block;
-      position: relative;
-      top: 10px;
-      color: #E7EAED;
-      font-size: 25px;
-      font-weight: bold;
-    }
-
-    span {
-      position: absolute;
-      top: 20px;
-      right: 100px;
-      color: red;
-    }
-  }
-
-  .mymap {
-    position: absolute;
-    top: 50px;
-    left: 0px;
-  }
-
-  .devStatus {
-    position: absolute;
-    top: 55px;
-    width: 250px;
-    height: 260px;
-    animation-delay: 1000ms;
-  }
-
-  .devCount {
-    position: absolute;
-    top: 325px;
-    left: 0px;
-    width: 250px;
-    height: 200px;
-    animation-delay: 1000ms;
-  }
-
-  .monthCount {
-    position: absolute;
-    top: 535px;
-    width: 250px;
-    height: 210px;
-    animation-delay: 1000ms;
-  }
-
-  .devItem {
-    position: absolute;
+#home
+  .homeTl
+    height 45px
+    background-color #131313
+    border 3px solid #131313
+    border-radius 10px
+    text-align center
+    h1
+      display block
+      position relative
+      top 10px
+      color #E7EAED
+      font-size 25px
+      font-weight bold
+    span
+      position absolute
+      top 20px
+      right 100px
+      color red
+  .mymap
+    position absolute
+    top 50px
+    left 0px
+  .devStatus
+    position absolute
+    top 55px
+    width 250px
+    height 260px
+    animation-delay 1000ms
+  .mqttws
+    position absolute
+    top 55px
+    left 300px
+    width 300px
+    height 260px
+    animation-delay 1000ms
+  .viewtest
+    position absolute
+    top 55px
+    left 500px
+    width 300px
+    height 260px
+    animation-delay 1000ms
+  .devCount
+    position absolute
+    top 325px
+    left 0px
+    width 250px
+    height 200px
+    animation-delay 1000ms
+  .monthCount
+    position absolute
+    top 535px
+    width 250px
+    height 210px
+    animation-delay 1000ms
+  .devItem
+    position absolute
     // left 0px
-    top: 55px;
-    width: 300px;
-    height: 690px;
-    animation-delay: 1000ms;
-  }
-
-  .devData {
-    position: absolute;
+    top 55px
+    width 300px
+    height 690px
+    animation-delay 1000ms
+  .devData
+    position absolute
     // left 570px
-    top: 55px;
-    width: 300px;
-    height: 690px;
-    animation-delay: 1000ms;
-  }
-
-  .yunTu {
-    position: absolute;
-    top: 55px;
+    top 55px
+    width 300px
+    height 690px
+    animation-delay 1000ms
+  .yunTu
+    position absolute
+    top 55px
     // left 300px
-    width: 930px;
-    height: 690px;
-    animation-delay: 1000ms;
-  }
-
-  .projectImg {
-    position: absolute;
-    left: 728px;
-    top: 430px;
-    width: 380px;
-    height: 315px;
-    animation-delay: 1000ms;
-  }
-
-  .projectCad {
-    position: absolute;
-    left: 330px;
-    top: 430px;
-    width: 380px;
-    height: 315px;
-    animation-delay: 1000ms;
-  }
-
-  .projectCad2 {
-    position: absolute;
-    width: 1520px;
-    z-index: 100;
-  }
-
-  .powerStatus {
-    position: absolute;
-    top: 60px;
-    right: 0px;
-    width: 450px;
-    height: 350px;
-    animation-duration: 1000ms;
-  }
-
-  .nowAlarm {
-    position: absolute;
-    top: 430px;
-    right: 0px;
-    width: 450px;
-    height: 315px;
-    overflow: hidden;
-    animation-duration: 1000ms;
-  }
-
-  .projectMp4 {
-    position: absolute;
-    left: 1130px;
-    top: 430px;
-    width: 380px;
-    height: 315px;
-    animation-delay: 1000ms;
-  }
-
-  .alarmanalysis {
-    position: absolute;
-    right: 10px;
-    top: 55px;
-    width: 580px;
-    height: 365px;
-    animation-delay: 1000ms;
-  }
-}
+    width 930px
+    height 690px
+    animation-delay 1000ms
+  .projectImg
+    position absolute
+    left 728px
+    top 430px
+    width 380px
+    height 315px
+    animation-delay 1000ms
+  .projectCad
+    position absolute
+    left 330px
+    top 430px
+    width 380px
+    height 315px
+    animation-delay 1000ms
+  .projectCad2
+    position absolute
+    width 1520px
+    z-index 100
+  .powerStatus
+    position absolute
+    top 60px
+    right 0px
+    width 450px
+    height 350px
+    animation-duration 1000ms
+  .nowAlarm
+    position absolute
+    top 430px
+    right 0px
+    width 450px
+    height 315px
+    overflow hidden
+    animation-duration 1000ms
+  .projectMp4
+    position absolute
+    left 1130px
+    top 430px
+    width 380px
+    height 315px
+    animation-delay 1000ms
+  .alarmanalysis
+    position absolute
+    right 10px
+    top 55px
+    width 580px
+    height 365px
+    animation-delay 1000ms
 </style>

@@ -33,6 +33,12 @@ export default {
   devicecompanys (state) {
     return state.devicecompanys
   },
+  devicedata (state) {
+    return state.devicedata
+  },
+  indexdevpros (state) {
+    return state.indexdevpros
+  },
   // project
   project (state) {
     return state.project
@@ -73,9 +79,9 @@ export default {
     return state.users
   },
   // other
-  lcAcsB128 (state) {
-    return state.lcAcsB128
-  },
+  // lcAcsB128 (state) {
+  //   return state.lcAcsB128
+  // },
   lcAcs (state) {
     return state.lcAcs
   }
