@@ -1,6 +1,6 @@
 <template>
   <div id="my3dother">
-    <iframe class="myIframe" src="https://www.thingjs.com/s/6671e6e47c10da1ccb84419d"></iframe>
+    <iframe class="myIframe" src="https://www.thingjs.com/pp/b21eff47abffbbc6456ba66c"></iframe>
   </div>
 </template>
 

@@ -23,13 +23,13 @@ export default {
     }
   },
   mounted: function () {
-    this.client = new Paho.MQTT.Client('192.168.0.200', 8083, 'mqttjs_e8022a4d0b112');
+    this.client = new Paho.MQTT.Client('192.168.0.200', 8085, 'mqttjs_e8022a4d0b112');
     var _client = this.client;
     var opt = this.options =
       {
         invocationContext: {
           host: '192.168.0.200',
-          port: 8083,
+          port: 8085,
           path: _client.path,
           clientId: 'mqttjs_e8022a4d0b112'
         },
