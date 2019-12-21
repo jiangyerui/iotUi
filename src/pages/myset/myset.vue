@@ -1,7 +1,7 @@
 <template>
   <div id="myset">
     <div class="iotTitle">
-      <h1 class="iotTitleH1">北京联创广汇安全用电物联网云</h1>
+      <h1 class="iotTitleH1" @click.stop="funHomeTl()">北京联创广汇电气物联网云平台</h1>
     </div>
     <div class="mysetside">
       <ul class="mysetsideUl">
@@ -62,6 +62,13 @@ export default {
   },
   mounted() {
     this.$store.dispatch("selectUsersTree")
+  },
+  methods: {
+    funHomeTl() {
+      this.$router.replace('/home');
+      // location.reload();
+      // this.$store.dispatch("getLcAcsB128");
+    }
   }
 };
 </script>

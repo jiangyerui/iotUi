@@ -109,6 +109,8 @@ export const reqSelectCameraByPage = ({pageNum,pageSize,cameraName}) => ajaxGet(
 export const reqAddAlarmLog = (alarmlog) => ajaxPost('/platform/alarmLog/addAlarmLog/',alarmlog)
 // 删除一个报警记录
 export const reqDeleteAlarmLogById = (alarmlogId) => ajaxDelete('/platform/alarmLog/deleteAlarmLogById/'+alarmlogId)
+// 处理一个报警记录
+export const reqSloveAlarmLogById = (alarmlogId) => ajaxGet('/platform/alarmLog/sloveAlarmLogById/'+alarmlogId)
 // 修改一个报警记录
 export const reqUpdateAlarmLog = (alarmlog) => ajaxPut('/platform/alarmLog/updateAlarmLog/',alarmlog)
 // 查询一个报警记录

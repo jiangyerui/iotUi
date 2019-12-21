@@ -49,7 +49,8 @@ export default {
 <style lang='stylus' rel='stylesheet/stylus'>
 #devdata
   height 100%
-  background-color #131313
+  // background-color #131313
+  background-color rgba(19,19,19,0.8)
   border 3px solid #383838
   border-radius 20px
   .tl

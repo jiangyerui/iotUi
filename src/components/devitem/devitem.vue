@@ -3,7 +3,7 @@
     <div class="tl">
       <h1>设备列表</h1>
     </div>
-    <mqttws class="mqttws" ref="mymqttws" v-on:emitdeviceitem="updatemapofdeviceitem"></mqttws>
+    <!-- <mqttws class="mqttws" ref="mymqttws" v-on:emitdeviceitem="updatemapofdeviceitem"></mqttws> -->
     <!-- <ul>
       <li v-for='(proItem,i) in list' :key="proItem.proNo">
         <p id="lab" @click="changeShow(i)">{{proItem.proName}}</p>
@@ -117,8 +117,9 @@ export default {
     },
     devClick(mac) {
       this.$store.dispatch("selectDeviceDataByMac", mac);
-      this.$refs.mymqttws.changeTopic(mac);
+      // this.$refs.mymqttws.changeTopic(mac);
       this.$emit('func', mac)
+      this.$emit('emithomeupdatedevicedata',mac)
     },
     changeShow(i) {
       // console.log(i)
@@ -137,7 +138,8 @@ export default {
 <style lang='stylus' rel='stylesheet/stylus'>
 #devitem
   height 650px
-  background-color #131313
+  // background-color #131313
+  background-color rgba(19,19,19,0.8)
   border 3px solid #383838
   border-radius 20px
   overflow hidden

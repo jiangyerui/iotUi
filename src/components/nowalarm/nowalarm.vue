@@ -2,7 +2,7 @@
   <div id="nowalarm">
     <div class="tl">
       <h1>实时报警</h1>
-      <span @click="cui()">点击催单</span>
+      <span @click="cui()">详情</span>
     </div>
     <div class="scroll">
       <ul :style="{top}" :class="{transition:index!=0}">
@@ -27,9 +27,6 @@ export default {
     return {
       list: [{ dt: new Date(), no: '862545420', type: '电气火灾' },
       { dt: new Date(), no: '862545421', type: '电气火灾' },
-      { dt: new Date(), no: '862545422', type: '电气火灾' },
-      { dt: new Date(), no: '862545423', type: '电气火灾' },
-      { dt: new Date(), no: '862545438', type: '电气火灾' },
       { dt: new Date(), no: '862545439', type: '电气火灾' }],
       top: '',
       index: 0,
@@ -40,6 +37,7 @@ export default {
   },
   mounted() {
     this.goScroll()
+    // this.list = this.alarmLogs
   },
   computed: {
     ...mapState(["alarmLogs"]),
@@ -56,7 +54,8 @@ export default {
       console.log('120')
     },
     cui() {
-      alert('您将以短信的方式通知相关安全责任人及时去处理当前报警列表！')
+      this.$router.replace('/myset/mysetalarmlog');
+      // alert('您将以短信的方式通知相关安全责任人及时去处理当前报警列表！')
     },
     goScroll() {
       var _this = this
@@ -107,7 +106,8 @@ export default {
 
 <style lang='stylus' rel='stylesheet/stylus'>
 #nowalarm
-  background-color #131313
+  // background-color #131313
+  background-color rgba(19, 19, 19, 0.8)
   border 3px solid #383838
   border-radius 20px
   .tl

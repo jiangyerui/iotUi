@@ -1,9 +1,9 @@
 <template>
   <div id="mqttws">
-    <input type="text" id="msg" v-model="msg" />
+    <!-- <input type="text" id="msg" v-model="msg" />
     <input type="button" value="Send" @click="send" />
     <input type="button" value="Start" @click="start" />
-    <input type="button" value="Stop" @click="stop" />
+    <input type="button" value="Stop" @click="stop" /> -->
   </div>
 </template>
 <style>
@@ -62,10 +62,10 @@ export default {
     // 监听消息
     onMessageArrived: function (message) {
       let obj = JSON.parse(message.payloadString);
-      // console.log("收到实时数据消息"+obj.alarmCompanyId);
-      if (obj.hasOwnProperty("no")) {
+      console.log("收到实时数据消息"+obj.mac);
+      if (obj.hasOwnProperty("mac")) {
         // console.log("收到实时数据消息"+JSON.stringify(obj));
-        this.$store.dispatch("updatedevicedatafrommqtt", obj);// 更新设备实时数据
+        this.$store.dispatch("updatedevicedatafrommqtt", obj);// 更新智慧用电设备实时数据
       }
       if (obj.hasOwnProperty("alarmProjectId")) {
         // console.log("收到报警消息"+JSON.stringify(obj));
@@ -74,7 +74,7 @@ export default {
           if (item.project.projectId === obj.alarmProjectId) {
             var as = this.alarmLogs
             as.push(obj)
-            console.log("监听到一条报警,mac=" + obj.alarmExtend1);
+            // console.log("监听到一条报警,mac=" + obj.alarmExtend1);
             this.$store.dispatch("updateCurrentAlarmLogs", as);// 更新报警
             item.project.projectDeviceStatus = 2
             is.push(item)
@@ -83,7 +83,7 @@ export default {
           }
         })
         this.$store.dispatch("updateDeviceProjects", is);// 更新项目信息
-        this.$emit("emitdeviceitem")
+        this.$emit("emithomeupdatemap")
       }
     },
     // onConnect: function () {
@@ -100,10 +100,10 @@ export default {
           console.log(error)
         }
       }
-      // console.log("退订topic=" + 'currentdevdata/' + this.devicedata.no)
-      this.client.unsubscribe('currentdevdata/' + this.devicedata.no, opt);
+      // console.log("退订topic=" + 'currentdevdata/' + this.devicedata.mac)
+      this.client.unsubscribe('currentdevdata/' + this.devicedata.mac, opt);
       // console.log('定阅topic = ' + 'currentdevdata/' + topic)
-      this.client.subscribe('currentdevdata/' + topic);// 订阅主题
+      this.client.subscribe('currentdevdata/' + topic,opt);// 订阅主题
     },
     send: function () {
       var s = this.msg;

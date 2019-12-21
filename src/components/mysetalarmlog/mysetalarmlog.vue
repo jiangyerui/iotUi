@@ -44,7 +44,8 @@
           <td v-else>未处理</td>
           <td>
             <a href="#" @click.prevent="urgeAlarmLog(item.alarmId)">督促</a>
-            <a href="#" @click.prevent="deleteAlarmLog(item.alarmId)">删除</a>
+            <!-- <a href="#" @click.prevent="deleteAlarmLog(item.alarmId)">删除</a> -->
+            <a href="#" @click.prevent="sloveAlarmLog(item.alarmId)">处理</a>
           </td>
         </tr>
       </table>
@@ -69,6 +70,7 @@ import { mapState } from "vuex";
 import {
   reqAddAlarmLog,
   reqDeleteAlarmLogById,
+  reqSloveAlarmLogById,
   reqUpdateAlarmLog
 } from "../../api";
 export default {
@@ -178,6 +180,16 @@ export default {
       var a = window.confirm("确认要删除吗？")
       if (a) {
         reqDeleteAlarmLogById(alarmLogId);
+        this.pageHandler(this.page);
+      } else {
+
+      }
+    },
+    // 处理一条报警
+    sloveAlarmLog(alarmLogId) {
+      var a = window.confirm("确认要处理吗？")
+      if (a) {
+        reqSloveAlarmLogById(alarmLogId);
         this.pageHandler(this.page);
       } else {
 

@@ -1,11 +1,24 @@
 <template>
   <div id="home" v-if="this.$route.path=='/home'">
     <div class="homeTl">
-      <h1 @click.stop="funHomeTl()">北京联创广汇安全用电物联网云</h1>
-      <span :style="{color: homeSpanColor}" @click.stop="funHomeSpan()">{{homeSpanText}}</span>
+      <h1 @click.stop="funHomeTl()">北京联创广汇电气物联网云平台</h1>
+      <!-- <span :style="{color: homeSpanColor}" @click.stop="funHomeSpan()">{{homeSpanText}}</span> -->
+      <img src="../myset/img/myset.png" @click="toMySet()" />
     </div>
-    <mymap class="mymap" v-show="isMyMap" ref="myrefmap"></mymap>
-    <!-- <mqttws class="mqttws"></mqttws> -->
+    <div class="div3d">
+      <button class="mybtn btn3d" @click="clickbtn3d">{{isMyMap?'切换3D':'切换地图'}}</button>
+      <!-- <button class="mybtn btnmap">地图</button> -->
+    </div>
+    <mymap
+      class="mymap"
+      v-show="isMyMap"
+      ref="myrefmap"
+      v-on:emitmapdddone="changemapdddone"
+      v-on:emitmapdddotther="changemapdddother"
+    ></mymap>
+    <my3d class="my3d" v-show="is3d"></my3d>
+    <my3dother class="my3dother" v-show="is3dother"></my3dother>
+    <mqttws class="mqttws" ref="mymqttws" v-on:emithomeupdatemap="updatemapofhome"></mqttws>
     <!-- <viewtest class="viewtest"></viewtest> -->
     <devstatus
       class="devStatus"
@@ -44,7 +57,7 @@
       :class="[classDevItem]"
       :style="{left: devItemLeft+'px'}"
       v-on:func="funIsDevItem"
-      v-on:emithome="updatemapofhome"
+      v-on:emithomeupdatedevicedata="updatedevicedata"
       v-show="isDevItem"
     >设备列表</devitem>
     <devdata
@@ -96,6 +109,8 @@
 
 <script type='text/ecmascript-6'>
 import mymap from "../../components/mymap/mymap.vue";
+import my3d from "../../components/my3d/my3d.vue";
+import my3dother from "../../components/my3dother/my3dother.vue";
 // import viewtest from "../../components/viewtest/viewtest.vue";
 import mqttws from "../../components/mqttws/mqttws.vue";
 import devstatus from "../../components/devstatus/devstatus.vue";
@@ -122,13 +137,20 @@ export default {
     // var hao = new SpeechSynthesisUtterance(this.$refs.myNowAlarm.alarmToString);
     // speechSynthesis.speak(hao);
     // console.log(this.$refs.myNowAlarm.alarmToString)
+
     this.$store.dispatch("selectDeviceProjectsByCurrentUser");
     this.$store.dispatch("selectAlarmLogByCurrentUser");
+    // 禁止页面滚动
+    var mo = function (e) { e.preventDefault(); };
+    document.body.style.overflow = 'hidden';
+    document.addEventListener("touchmove", mo, false); // 禁止页面滑动
   },
   computed: {
-    ...mapState(["usercurrent", "address", "indexdevpros", "categorys"])
+    ...mapState(["alarmLogs", "usercurrent", "address", "indexdevpros", "categorys"])
   },
   components: {
+    my3d,
+    my3dother,
     mymap,
     mqttws,
     // viewtest,
@@ -170,6 +192,8 @@ export default {
       homeSpanColor: "red",
       homeSpanText: "消音",
       isMyMap: true,
+      is3d: false,
+      is3dother: false,
       isDevStatus: true, // 饼
       isDevCount: true, // 设备数量
       isMonthCount: true, // 本月统计
@@ -188,8 +212,32 @@ export default {
     };
   },
   methods: {
+    toMySet() {
+      this.$router.replace('/myset/mysetuser');
+    },
+    changemapdddone() {
+      // console.log("changemapdddone1")
+      this.is3d = true
+      this.is3dother = false
+      this.isMyMap = false
+    },
+    changemapdddother() {
+      // console.log("changemapdddother2")
+      this.is3d = false
+      this.is3dother = true
+      this.isMyMap = false
+    },
+    clickbtn3d() {
+      this.is3d = true
+      this.is3dother = false
+      this.isMyMap = !this.isMyMap
+    },
+    updatedevicedata(mac) {
+      // console.log('updatedevicedata===')
+      this.$refs.mymqttws.changeTopic(mac);
+    },
     updatemapofhome() {
-      console.log("updatemapofhome")
+      // console.log("updatemapofhome")
       this.$refs.myrefmap.updatemapofmymap()
     },
     funHomeTl() {
@@ -198,13 +246,16 @@ export default {
       // this.$store.dispatch("getLcAcsB128");
     },
     funHomeSpan() {
+      console.log('speechSynthesis.pending==' + speechSynthesis.pending)
       speechSynthesis.pause();
       if (this.homeSpanColor === "red") {
         speechSynthesis.pause();
+        console.log('pause')
         this.homeSpanColor = "green";
         this.homeSpanText = "播放";
       } else {
         speechSynthesis.resume();
+        console.log('pause')
         this.homeSpanColor = "red";
         this.homeSpanText = "消音";
       }
@@ -425,12 +476,12 @@ export default {
     height 45px
     background-color #131313
     border 3px solid #131313
-    border-radius 10px
+    // border-radius 10px
     text-align center
     h1
       display block
       position relative
-      top 10px
+      top 5px
       color #E7EAED
       font-size 25px
       font-weight bold
@@ -439,14 +490,43 @@ export default {
       top 20px
       right 100px
       color red
-  .mymap
+    img
+      position absolute
+      top 12px
+      right 20px
+      width 25px
+      height 25px
+      z-index 999
+  .div3d
     position absolute
     top 50px
+    left 240px
+    width 150px
+    height 50px
+    // background-color red
+    z-index 200
+    .mybtn
+      width 80px
+      height 30px
+      border-radius 5px
+      color #E7EAED
+      cursor pointer
+      background-color #131313
+    .btn3d
+      background-color #131313
+    .btnmap
+      background-color #131313
+  .mymap
+    position absolute
+    top 45px
     left 0px
+    // z-index 9998
   .devStatus
     position absolute
     top 55px
-    width 250px
+    padding-left 6px
+    // width 250px
+    width 260px
     height 260px
     animation-delay 1000ms
   .mqttws
@@ -465,15 +545,17 @@ export default {
     animation-delay 1000ms
   .devCount
     position absolute
-    top 325px
+    top 323px
     left 0px
-    width 250px
-    height 200px
+    padding-left 6px
+    width 260px
+    height 205px
     animation-delay 1000ms
   .monthCount
     position absolute
     top 535px
-    width 250px
+    padding-left 6px
+    width 260px
     height 210px
     animation-delay 1000ms
   .devItem
@@ -483,6 +565,7 @@ export default {
     width 300px
     height 690px
     animation-delay 1000ms
+    z-index 300
   .devData
     position absolute
     // left 570px
@@ -492,7 +575,7 @@ export default {
     animation-delay 1000ms
   .yunTu
     position absolute
-    top 55px
+    top 50px
     // left 300px
     width 930px
     height 690px
@@ -514,7 +597,7 @@ export default {
   .projectCad2
     position absolute
     width 1520px
-    z-index 100
+    z-index 999
   .powerStatus
     position absolute
     top 60px
