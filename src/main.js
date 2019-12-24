@@ -19,6 +19,9 @@ import axios from 'axios'
 // import qs from 'qs'
 // 使用axios
 
+
+
+
 // Vue.prototype.axios = axios
 // axios.defaults.baseURL = 'http://192.168.0.200:8089'// 开发环境，请注释本行
 axios.defaults.baseURL = process.env.API_ROOT// 开发环境，请注释本行
