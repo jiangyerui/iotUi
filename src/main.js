@@ -13,20 +13,26 @@ import echarts from 'echarts'
 import 'view-design/dist/styles/iview.css';
 // 引入axios
 import axios from 'axios'
-import { postRequest } from './api/ajaxPost'
+// import { postRequest } from './api/ajaxPost'
 
 // 引入qs
 // import qs from 'qs'
 // 使用axios
+
+// Vue.prototype.axios = axios
+// axios.defaults.baseURL = 'http://192.168.0.200:8089'// 开发环境，请注释本行
+axios.defaults.baseURL = process.env.API_ROOT// 开发环境，请注释本行
+// 与后端进行数据交换的时候带上cookie
+axios.defaults.withCredentials = true;
 Vue.prototype.axios = axios
 // Vue.use(ViewUI);
-Vue.prototype.postRequest = postRequest;
+// Vue.prototype.postRequest = postRequest;
 
 // Vue.prototype.laydate = laydate
 // 使用qs
 // Vue.prototype.qs = qs
 
-Vue.prototype.base = "http://localhost:8080"
+// Vue.prototype.base = "http://localhost:8080"
 
 Vue.component('pagination', Pagination)
 // 引入echarts

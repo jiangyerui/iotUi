@@ -1,5 +1,7 @@
 import axios from 'axios'
-const baseUrl = "http://localhost:8080"
+// const baseUrl = "http://localhost:8080"
+const baseUrl = ""
+// const baseUrl = "http://localhost:8089"
 
 export default function ajaxDelete(url) {
     // axios.delete(baseUrl+url)

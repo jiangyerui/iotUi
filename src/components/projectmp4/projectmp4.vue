@@ -4,7 +4,7 @@
       <h1>视频监控</h1>
     </div>
     <video width="370" height="260" poster="./img/camre.png" controls loop>
-      <source src="./img/111.mp4" type="video/mp4">
+      <!-- <source src="./img/111.mp4" type="video/mp4"> -->
       您的浏览器不支持Video标签。
     </video>
     <!-- <iframe

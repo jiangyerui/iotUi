@@ -23,12 +23,14 @@ export default {
     }
   },
   mounted: function () {
-    this.client = new Paho.MQTT.Client('192.168.0.200', 8085, 'mqttjs_e8022a4d0b112');
+    // this.client = new Paho.MQTT.Client('192.168.0.200', 8085, 'mqttjs_e8022a4d0b112');
+    this.client = new Paho.MQTT.Client('39.98.213.145', 8085, 'mqttjs_e8022a4d0b112');
     var _client = this.client;
     var opt = this.options =
       {
         invocationContext: {
-          host: '192.168.0.200',
+          host: '39.98.213.145',
+          // host: '192.168.0.200',
           port: 8085,
           path: _client.path,
           clientId: 'mqttjs_e8022a4d0b112'
@@ -74,7 +76,7 @@ export default {
           if (item.project.projectId === obj.alarmProjectId) {
             var as = this.alarmLogs
             as.push(obj)
-            // console.log("监听到一条报警,mac=" + obj.alarmExtend1);
+            console.log("监听到一条报警,mac=" + obj.alarmExtend1);
             this.$store.dispatch("updateCurrentAlarmLogs", as);// 更新报警
             item.project.projectDeviceStatus = 2
             is.push(item)

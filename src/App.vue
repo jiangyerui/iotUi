@@ -33,16 +33,17 @@
   </div>
 </template>
 <script type='text/ecmascript-6'>
+import { postRequest } from './api/ajaxPost'
 export default {
   name: "App",
-  created() {},
+  created() { },
   mounted() {
     this.$store.dispatch("selectCurrentUser");
   },
   directives: {
     focus: {
       // 指令的定义
-      inserted: function(el) {
+      inserted: function (el) {
         el.focus();
       }
     }
@@ -59,15 +60,16 @@ export default {
   },
   methods: {
     login() {
-      this.$router.replace("/login");
+      // this.$router.replace("/login");
       // this.$router.push({path: 'devsys'})
       // this.$store.dispatch('getLcAcsB128')
       // console.log('jj:'+lcAcsB128.mac)
     },
+
     submitClick: function() {
       var _this = this;
       this.loading = true;
-      this.postRequest("/login", {
+      postRequest("/login", {
         username: this.loginForm.username,
         password: this.loginForm.password
       }).then(resp => {

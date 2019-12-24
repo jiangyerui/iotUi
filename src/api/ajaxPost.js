@@ -1,8 +1,11 @@
 import axios from 'axios'
-const baseUrl = "http://localhost:8080"
+// const baseUrl = "http://localhost:8080"
+const baseUrl = ""
+// const baseUrl = "http://192.168.0.200:8089"
 
 export default function ajaxPost(url, data) {
-    axios({
+  // axios({
+  this.axios({
         method: "post",
         url: baseUrl + url,
         data: JSON.stringify(data),
@@ -19,11 +22,13 @@ export default function ajaxPost(url, data) {
             console.log(error);
         });
 }
-let base = '';
+// let base = '';
 export const postRequest = (url, params) => {
+  // return axios({
   return axios({
     method: 'post',
-    url: `${base}${url}`,
+    // url: `${base}${url}`,
+    url: `${baseUrl}${url}`,
     data: params,
     transformRequest: [function (data) {
       let ret = ''
@@ -33,7 +38,7 @@ export const postRequest = (url, params) => {
       return ret
     }],
     headers: {
-      'Content-Type': 'application/x-www-form-urlencoded'
+      // 'Content-Type': 'application/x-www-form-urlencoded'
       // "withCredentials": true
     }
   });
