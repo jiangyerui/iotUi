@@ -211,7 +211,8 @@ export default {
     .tabCamera
       tr
         td
-          padding 10px 25px
+          // padding 10px 25px
+          padding 10px 10px
           border 1px solid #000
           color #E7EAED
         .classNone

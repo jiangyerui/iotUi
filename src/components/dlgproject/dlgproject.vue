@@ -43,6 +43,12 @@
           <input type="text" placeholder="请输入详细地址" v-model="project.projectAddress" />
         </div>
         <div class="contextProjectItem" v-if="usercurrent.userRole===1">
+          <label>项目图片:</label>
+          <input type="hidden" placeholder="选择项目图片" v-model="project.projectImg" />
+          <input type="file" value id="file" @change="onUpload" />
+          <img :src='project.projectImg' alt="" >
+        </div>
+        <div class="contextProjectItem" v-if="usercurrent.userRole===1">
           <label>3D-url:</label>
           <input type="text" placeholder="请输入3D图像url" v-model="project.project3durl" />
         </div>
@@ -107,6 +113,7 @@ import { formatDate } from "@/common/commonUtil.js";
 import { mapState } from "vuex";
 import axios from "axios";
 import { Cascader } from "view-design";
+// import axios from 'axios'
 export default {
   name: "dlgproject",
   components: {
@@ -218,7 +225,7 @@ export default {
       eventElem: ".date-input-icon1",
       trigger: "click",
       // showBottom: false,
-      change: function(value) {
+      change: function (value) {
         // console.log('dididididididi')
         // this.startTime = value
       },
@@ -261,7 +268,7 @@ export default {
       this.data = response.data;
     });
   },
-  created() {},
+  created() { },
   computed: {
     ...mapState([
       "userstree",
@@ -277,7 +284,7 @@ export default {
     ])
   },
   watch: {
-    value1: function(newVal, oldVal) {
+    value1: function (newVal, oldVal) {
       // 获取城市编码
       this.project.projectProvince = newVal[0];
       this.project.projectCity = newVal[1];
@@ -285,6 +292,52 @@ export default {
     }
   },
   methods: {
+    uploadImg: function (url, data) {
+      // return $.ajax({
+      //   url: url,
+      //   data: data,
+      //   dataType: "json",
+      //   method: "post",
+      //   contentType: false,
+      //   cache: false,
+      //   processData: false
+      // });
+      this.axios({
+        method: "post",
+        url: url,
+        // data: JSON.stringify(data),
+        data: data,
+        // data: data,
+        headers: {
+          // "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
+          "Content-Type": "application/json;charset=UTF-8"
+        }
+      })
+        .then(response => {
+          console.log(response.data.message);
+          this.project.projectImg = response.data.message
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    },
+    upload: function (file2) {
+      // var url = root + "/upload/img?";//后台接口
+      var url = "http://localhost:8089/platform/upload/uploadimg";// 后台接口
+      var data = new FormData();
+      data.append("file", file2);
+      // data.append("pathType", 4)
+      return this.uploadImg(url, data);
+    },
+    onUpload: function (e) {
+      var file2 = e.target.files[0];
+      this.upload(file2)
+      // .done(function (res) { // 封装的请求接口api.js文件
+      //   if (res.result.code === 0) {
+      //     console.log(res);
+      //   }
+      // });
+    },
     dlgConfirm() {
       this.$emit("dlgConfirmDlgProject", this.project);
     },
@@ -320,7 +373,7 @@ export default {
   .container
     position absolute
     width 500px
-    height 600px
+    height 700px
     top 50%
     left 50%
     transform translate(-50%, -50%)
@@ -361,6 +414,9 @@ export default {
           border-radius 4px
         img
           width 20px
+          // position absolute
+          // width 50px
+          // left 100px
     .btnDiv
       position absolute
       // margin-right 50px

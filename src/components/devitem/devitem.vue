@@ -1,7 +1,11 @@
 <template>
   <div id="devitem">
     <div class="tl">
-      <h1>设备列表</h1>
+      <h1>
+        设备列表
+        <span @click="tlMore" v-if="isMore">更多</span>
+        <span @click="tlMoreBack" v-if="!isMore">返回</span>
+      </h1>
     </div>
     <!-- <mqttws class="mqttws" ref="mymqttws" v-on:emitdeviceitem="updatemapofdeviceitem"></mqttws> -->
     <!-- <ul>
@@ -38,6 +42,7 @@ export default {
   name: 'devitem',
   data() {
     return {
+      isMore: true,
       isShow: true,
       statusColor: 'green',
       lcAcsTimer: null,
@@ -111,6 +116,15 @@ export default {
     ...mapState(["devicedata", "indexdevpros", "lcAcs", "address", "categorys"])
   },
   methods: {
+    tlMore() {
+      this.isMore = false
+      this.$emit('tlMore')
+    },
+    tlMoreBack() {
+      // this.isMore=false
+      this.$router.go(0);
+      location.reload();
+    },
     updatemapofdeviceitem() {
       console.log("updatemapofdeviceitem")
       this.$emit('emithome')
@@ -119,7 +133,7 @@ export default {
       this.$store.dispatch("selectDeviceDataByMac", mac);
       // this.$refs.mymqttws.changeTopic(mac);
       this.$emit('func', mac)
-      this.$emit('emithomeupdatedevicedata',mac)
+      this.$emit('emithomeupdatedevicedata', mac)
     },
     changeShow(i) {
       // console.log(i)
@@ -139,7 +153,7 @@ export default {
 #devitem
   height 650px
   // background-color #131313
-  background-color rgba(19,19,19,0.8)
+  background-color rgba(19, 19, 19, 0.8)
   border 3px solid #383838
   border-radius 20px
   overflow hidden
@@ -153,6 +167,12 @@ export default {
       text-align center
       font-size 18px
       font-weight bold
+      span
+        position absolute
+        left 250px
+        top 5px
+        font-size 14px
+        cursor pointer
   ul
     position relative
     // height 650px
@@ -165,6 +185,7 @@ export default {
       color #E7EAED
       background #383838
       border-top 1px solid #000
+      cursor pointer
       #lab
         width 100%
         height 35px

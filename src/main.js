@@ -7,20 +7,8 @@ import router from './router'
 import animated from 'animate.css' // npm install animate.css --save安装，再引入
 import Pagination from 'vue-pagination-2'
 import echarts from 'echarts'
-// import websocket from 'websocket'
-// import laydate from 'laydate'
-// import ViewUI from 'view-design';
 import 'view-design/dist/styles/iview.css';
-// 引入axios
 import axios from 'axios'
-// import { postRequest } from './api/ajaxPost'
-
-// 引入qs
-// import qs from 'qs'
-// 使用axios
-
-
-
 
 // Vue.prototype.axios = axios
 // axios.defaults.baseURL = 'http://192.168.0.200:8089'// 开发环境，请注释本行

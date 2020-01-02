@@ -57,6 +57,7 @@
       :class="[classDevItem]"
       :style="{left: devItemLeft+'px'}"
       v-on:func="funIsDevItem"
+      v-on:tlMore="funIsDevData"
       v-on:emithomeupdatedevicedata="updatedevicedata"
       v-show="isDevItem"
     >设备列表</devitem>
@@ -64,7 +65,7 @@
       class="devData"
       :class="[classDevData]"
       :style="{left: devDataLeft+'px'}"
-      @click.native="funIsDevData()"
+      @click.native="funIsDevDataMore()"
       v-show="isDevData"
     >单设备数据</devdata>
     <yuntu
@@ -97,6 +98,7 @@
       :class="[classProjectMp4]"
       @click.native="funIsProjectMp4()"
       v-show="isProjectMp4"
+      ref="myProjectMp4"
     >视频监控</projectmp4>
     <alarmanalysis
       class="alarmanalysis"
@@ -206,7 +208,9 @@ export default {
       isProjectCad: false, // 逃生图
       isProjectCad2: false, // 逃生图 大
       isProjectMp4: false, // 视频监控
+      isProjectMp4dlg: false, // 视频监控
       isAlarmanalysis: false, // 报警分析
+      isPage2: false,
       devDataFlag: false,
       yunTuFlag: false
     };
@@ -235,6 +239,7 @@ export default {
     updatedevicedata(mac) {
       // console.log('updatedevicedata===')
       this.$refs.mymqttws.changeTopic(mac);
+      this.$refs.myProjectMp4.checkUrl(mac);
     },
     updatemapofhome() {
       // console.log("updatemapofhome")
@@ -341,31 +346,58 @@ export default {
       this.isProjectMp4 = false;
     },
     funIsDevItem(arg) {
-      // alert('当前设备编号为：'+arg)
-      this.classPowerStatus = "box animated bounceOutUp";
-      this.classNowAlarm = "box animated bounceOutDown";
-      // this.classYuntu = 'box animated bounceInRight'
-      this.isMyMap = true;
-      this.isDevStatus = true;
-      this.isDevCount = true;
-      this.isMonthCount = true;
-      // this.isPowerStatus = true
-      // this.isNowAlarm = true
-      this.isDevItem = true;
-      // this.isDevData = false
-      // this.isYunTu = true
-      // this.isProjectImg = false
-      // this.isProjectCad = false
-      this.isProjectCad2 = false;
-      // this.isProjectMp4 = false
-      if (this.yunTuFlag === false && this.devDataFlag === false) {
-        this.classYuntu = "box animated bounceInRight";
-        this.isDevData = false;
-        this.isYunTu = true;
-        this.yunTuFlag = true;
+      if (this.isPage2) {
+        // alert('当前设备编号为：'+arg)
+        this.classPowerStatus = "box animated bounceOutUp";
+        this.classNowAlarm = "box animated bounceOutDown";
+        // this.classYuntu = 'box animated bounceInRight'
+        this.isMyMap = true;
+        this.isDevStatus = true;
+        this.isDevCount = true;
+        this.isMonthCount = true;
+        // this.isPowerStatus = true
+        // this.isNowAlarm = true
+        this.isDevItem = true;
+        // this.isDevData = false
+        // this.isYunTu = true
+        // this.isProjectImg = false
+        // this.isProjectCad = false
+        this.isProjectCad2 = false;
+        // this.isProjectMp4 = false
+        // if (this.yunTuFlag === false && this.devDataFlag === false) {
+        //   this.classYuntu = "box animated bounceInRight";
+        //   this.isDevData = false;
+        //   this.isYunTu = true;
+        //   this.yunTuFlag = true;
+        // }
+      } else {
+        // alert('当前设备编号为：'+arg)
+        this.classPowerStatus = "box animated bounceOutUp";
+        this.classNowAlarm = "box animated bounceOutDown";
+        // this.classYuntu = 'box animated bounceInRight'
+        this.isMyMap = true;
+        this.isDevStatus = true;
+        this.isDevCount = true;
+        this.isMonthCount = true;
+        // this.isPowerStatus = true
+        // this.isNowAlarm = true
+        this.isDevItem = true;
+        // this.isDevData = false
+        // this.isYunTu = true
+        // this.isProjectImg = false
+        // this.isProjectCad = false
+        this.isProjectCad2 = false;
+        // this.isProjectMp4 = false
+        if (this.yunTuFlag === false && this.devDataFlag === false) {
+          this.classYuntu = "box animated bounceInRight";
+          this.isDevData = false;
+          this.isYunTu = true;
+          this.yunTuFlag = true;
+        }
       }
     },
     funIsDevData() {
+      this.isPage2 = true
       this.classDevStatus = "box animated bounceOutLeft";
       this.classDevCount = "box animated bounceOutLeft";
       this.classMonthCount = "box animated bounceOutLeft";
@@ -380,16 +412,42 @@ export default {
       this.isDevStatus = true;
       this.isDevCount = true;
       this.isMonthCount = true;
-      this.isPowerStatus = true;
-      this.isNowAlarm = true;
+      this.isPowerStatus = false;
+      this.isNowAlarm = false;
       this.isDevItem = true;
       this.isDevData = false;
-      this.isYunTu = true;
+      this.isYunTu = false;
       this.isProjectImg = true;
       this.isProjectCad = true;
       this.isProjectCad2 = false;
       this.isProjectMp4 = true;
       this.isAlarmanalysis = true;
+    },
+    funIsDevDataMore() {
+      // this.classDevStatus = 'box animated bounceOutLeft'
+      // this.classDevCount = 'box animated bounceOutLeft'
+      // this.classMonthCount = 'box animated bounceOutLeft'
+      // this.classDevItem = 'box animated bounceInDown'
+      // this.classYuntu = "box animated bounceOutDown";
+      this.classYuntu = "box animated bounceInDown";
+      this.classDevData = "box animated bounceOutDown";
+      // this.devItemLeft = 260 - 250
+      // this.devDataLeft = 570 - 250
+      this.isMyMap = true;
+      this.isDevStatus = true;
+      this.isDevCount = true;
+      this.isMonthCount = true;
+      this.isPowerStatus = true;
+      this.isNowAlarm = true;
+      this.isDevItem = true;
+      this.isDevData = false;
+      this.isYunTu = true;
+      this.isProjectImg = false;
+      this.isProjectCad = false;
+      this.isProjectCad2 = false;
+      this.yunTuFlag = false;
+      this.devDataFlag = true;
+      this.isProjectMp4 = false;
     },
     funIsYuntu() {
       // this.classDevStatus = 'box animated bounceOutLeft'
@@ -465,7 +523,10 @@ export default {
       this.isProjectCad2 = true;
       this.isProjectMp4 = true;
     },
-    funIsProjectMp4() { }
+    funIsProjectMp4() {
+      // console.log("plany")
+      // this.isProjectMp4dlg = true
+    }
   }
 };
 </script>
@@ -478,6 +539,7 @@ export default {
     border 3px solid #131313
     // border-radius 10px
     text-align center
+    cursor pointer
     h1
       display block
       position relative
@@ -620,6 +682,14 @@ export default {
     width 380px
     height 315px
     animation-delay 1000ms
+  .projectMp4dlg
+    position absolute
+    left 130px
+    top 130px
+    width 380px
+    height 315px
+    animation-delay 1000ms
+    z-index 9999
   .alarmanalysis
     position absolute
     right 10px

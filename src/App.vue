@@ -174,6 +174,7 @@ export default {
         color #F2F2F2
         font-size 18px
       input
+        width 200px
         height 28px
         border-radius 10pxs
       button
